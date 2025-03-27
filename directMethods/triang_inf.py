@@ -1,9 +1,6 @@
 import numpy as np
 
 def triang_inf(L, b):
-    """
-    Solve lower triangular system L*x = b
-    """
     M, N = L.shape
     x = np.zeros(M)
     
@@ -17,5 +14,4 @@ def triang_inf(L, b):
         x[0] = b[0] / L[0, 0]
         for i in range(1, N):
             x[i] = (b[i] - L[i, :i] @ x[:i]) / L[i, i]
-    
     return x
