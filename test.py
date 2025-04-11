@@ -92,8 +92,6 @@ def compare_methods(matrices, tolerances, max_iterations):
                     start_time = time.time()
                     x, iterations, method_time, error = method_func()
                     total_time = time.time() - start_time
-                    
-                    #Use total_time for direct methods that return 0 time
                     if method_time == 0:
                         method_time = total_time
                     
@@ -145,14 +143,14 @@ def plot_results(results):
     plt.tight_layout()
     plt.savefig('iterations_vs_condition.png')
     
-    #Time vs Matrix Size by Method
+    #Time vs Matrix size by method
     plt.figure(figsize=(12, 8))
     for method in methods:
         method_results = [r for r in results if r["Method"] == method and r["Tolerance"] == tolerances[0]]
         if method_results:
             sizes = [r["Size"] for r in method_results]
             times = [r["Time"] for r in method_results]
-            #Group by size and average
+            #Size and average
             unique_sizes = list(set(sizes))
             unique_sizes.sort()
             avg_times = []
@@ -172,12 +170,12 @@ def plot_results(results):
     #Error vs Tolerance for each method
     plt.figure(figsize=(12, 8))
     for method in methods:
-        for matrix_type in matrices[:3]:  # Limit to first 3 matrix types to avoid overcrowding
+        for matrix_type in matrices[:3]:
             method_matrix_results = [r for r in results if r["Method"] == method and r["Matrix"] == matrix_type]
             if method_matrix_results:
                 tols = [r["Tolerance"] for r in method_matrix_results]
                 errors = [r["Error"] for r in method_matrix_results]
-                if len(tols) > 0:  # Only plot if we have data
+                if len(tols) > 0:  #plot if we have data
                     plt.loglog(tols, errors, 'o-', label=f"{method} - {matrix_type.split(' ')[0]}")
     
     plt.xlabel('Tolerance')
