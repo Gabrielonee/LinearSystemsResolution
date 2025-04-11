@@ -2,7 +2,7 @@ import numpy as np
 import time
 from directMethods import triang_inf
 
-def fixed_gauss_seidl(A, b, x0, tol, nmax):
+def gauss_seidl(A, b, x0, tol, nmax):
     M, N = A.shape
     L = x0.shape[0]
     
