@@ -1,7 +1,7 @@
 import time
 import numpy as np
 
-def fixed_jor(A, b, x0, tol, nmax, omega):
+def jor(A, b, x0, tol, nmax, omega):
     M, N = A.shape
     L = x0.shape[0]
     
