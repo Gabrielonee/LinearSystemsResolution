@@ -198,7 +198,7 @@ def generate_report(results, plot_files):
     for method in methods:
         report += f"- {method}\n"
     
-    #Summary of matrices tested
+    #Summary of matrices tested --> DA CAMBIARE: FILE MATRICI
     matrices = list(set([r["Matrix"] for r in results]))
     sizes = list(set([r["Size"] for r in results]))
     report += "\n## Test Matrices\n\n"
@@ -257,7 +257,6 @@ def generate_report(results, plot_files):
     for method, avg_error in sorted(method_avg_errors.items(), key=lambda x: x[1]):
         report += f"- {method}: {avg_error:.2e}\n"
     
-    #Conclusions
     report += "\n## Conclusions\n\n"
     
     #Find best method for well-conditioned matrices
