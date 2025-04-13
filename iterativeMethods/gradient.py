@@ -5,7 +5,7 @@ def gradient(A, b, x0, tol=1e-6, nmax=1000):
     if A.shape[0] != A.shape[1]:
         raise ValueError("Matrix A is not a square matrix")
     if x0.shape[0] != A.shape[0]:
-        raise ValueError("Dimensions of matrix A does not match dimension of initial guess x0")
+        raise ValueError("Different sizes")
     
     #Matrix SPD
     if not np.allclose(A, A.T):
