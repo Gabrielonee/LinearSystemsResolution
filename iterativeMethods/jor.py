@@ -31,14 +31,3 @@ def jor_solver(A, b, tol=1e-6, x0=None, nmax=10000, omega=0.5):
     err = np.linalg.norm(b - A_sparse @ x_new) / np.linalg.norm(x_new)
 
     return x_new, nit, err
-
-
-A = np.array([[4, -1, 0], [-1, 4, -1], [0, -1, 4]])
-b = np.array([1, 2, 3])
-x0 = np.zeros_like(b)
-
-x, nit, err = jor_solver(A, b, tol=1e-6, omega=0.7)
-
-print(f"Solution: {x}")
-print(f"Iterations: {nit}")
-print(f"Relative residual error: {err:.2e}")

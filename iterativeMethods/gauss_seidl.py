@@ -1,36 +1,53 @@
 import numpy as np
-import time
-from directMethods import triang_inf
+import scipy.sparse as sp
+import scipy.sparse.linalg as spla
 
-def gauss_seidl(A, b, x0, tol, nmax):
-    M, N = A.shape
-    L = x0.shape[0]
-    
-    if M != N:
-        print('Matrix A has to be square')
-        return None, None, None, None
-    elif L != M:
-        print('shape(A) != shape(x0)')
-        return None, None, None, None
-    
-    if np.any(np.diag(A) == 0):
-        print('At least a diagonal entry is zero')
-        return None, None, None, None
-    
-    L_matrix = np.tril(A) #Lower triangular
-    B = A - L_matrix
-    xold = x0.copy()
-    xnew = x0.copy() 
+
+def gauss_seidel_solver(A, b, x0=None, tol=1e-6, nmax=10000):
+    """
+    Metodo di Gauss-Seidel per risolvere Ax = b.
+    Supporta sia matrici dense che sparse.
+    """
+    if x0 is None:
+        x = np.zeros_like(b)
+    else:
+        x = x0.copy()
+
+    A_sparse = sp.csr_matrix(A) if not sp.issparse(A) else A
+
+    # Estrai parte triangolare inferiore di A (inclusa diagonale)
+    L = sp.tril(A_sparse)  # Lower triangular + diagonal
+    R = A_sparse - L       # Parte superiore
+    L = L.tocsc()
+
     nit = 0
+    x_new = np.ones(b)
 
-    start_time = time.time()
-    while nit < nmax:
-        xold = xnew.copy()
-        xnew = triang_inf(L_matrix, b - B @ xold)
-        if np.linalg.norm(xnew - xold, np.inf) < tol:
+    for _ in range(nmax):
+        rhs = b - R @ x
+        # Risoluzione del sistema L x_new = rhs
+        if sp.issparse(L):
+            x_new = spla.spsolve_triangular(L, rhs, lower=True)
+        else:
+            x_new = spla.spsolve_triangular(L, rhs, lower=True)
+
+        if np.linalg.norm(x_new - x, np.inf) < tol:
             break
+
+        x = x_new
         nit += 1
 
-    elapsed_time = time.time() - start_time
-    err = np.linalg.norm(b - A @ xnew) / np.linalg.norm(xnew)
-    return xnew, nit, elapsed_time, err
+    err = np.linalg.norm(b - A_sparse @ x_new) / np.linalg.norm(x_new)
+
+    return x_new, nit,  err
+
+
+A = np.array([[4, -1, 0], [-1, 4, -1], [0, -1, 4]])
+b = np.array([1, 2, 3])
+x0 = np.zeros_like(b)
+
+x, nit, err = gauss_seidel_solver(A, b)
+
+print(f"Solution: {x}")
+print(f"Iteration: {nit}")
+print(f"Relative residual error: {err:.2e}")
