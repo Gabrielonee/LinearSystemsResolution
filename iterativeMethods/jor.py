@@ -1,33 +1,44 @@
-import time
 import numpy as np
+import scipy.sparse as sp
 
-def jor(A, b, x0, tol, nmax, omega):
-    M, N = A.shape
-    L = x0.shape[0]
-    
-    if M != N:
-        print('Matrix A is not a square matrix')
-        return None, None, None, None
-    elif L != M:
-        print('Dimensions of matrix A does not match dimension of initial guess x0')
-        return None, None, None, None
-    
-    D = np.diag(np.diag(A))
-    B = A - D  # (L+U)
-    xold = x0.copy()
-    xnew = x0.copy()
-    nit = 0  # iteration number
 
-    start_time = time.time()
-    while nit < nmax:
-        xold = xnew.copy()
-        xnew = np.linalg.solve(D, b - B @ xold)  # D^-1 * (b - B * xold)
-        xnew = omega * xnew + (1 - omega) * xold
-        
-        if np.linalg.norm(xnew - xold, np.inf) < tol:
+def jor_solver(A, b, tol=1e-6, x0=None, nmax=10000, omega=0.5):
+    """
+    Metodo JOR (Jacobi Over-Relaxation) per risolvere Ax = b.
+    Supporta sia matrici dense che sparse.
+    """
+    if x0 is None:
+        x = np.zeros_like(b)
+    else:
+        x = x0.copy()
+
+    A_sparse = sp.csr_matrix(A) if not sp.issparse(A) else A
+
+    D = A_sparse.diagonal()
+    R = A_sparse - sp.diags(D)
+
+    nit = 0
+    x_new = np.ones(b)
+
+    for _ in range(nmax):
+        x_new = (b - R @ x) / D
+        x_new = omega * x_new + (1 - omega) * x
+        if np.linalg.norm(x_new - x, np.inf) < tol:
             break
+        x = x_new
         nit += 1
-    
-    elapsed_time = time.time() - start_time
-    err = np.linalg.norm(b - A @ xnew) / np.linalg.norm(xnew)
-    return xnew, nit, elapsed_time, err
+
+    err = np.linalg.norm(b - A_sparse @ x_new) / np.linalg.norm(x_new)
+
+    return x_new, nit, err
+
+
+A = np.array([[4, -1, 0], [-1, 4, -1], [0, -1, 4]])
+b = np.array([1, 2, 3])
+x0 = np.zeros_like(b)
+
+x, nit, err = jor_solver(A, b, tol=1e-6, omega=0.7)
+
+print(f"Solution: {x}")
+print(f"Iterations: {nit}")
+print(f"Relative residual error: {err:.2e}")

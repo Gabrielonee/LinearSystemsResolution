@@ -32,15 +32,3 @@ def jacobi_solver(A, b, tol=1e-6, x0=None, nmax=20000):
     err = np.linalg.norm(x_new - x, np.inf)
 
     return x_new, nit, err
-
-
-A = np.array([[4, -1, 0], [-1, 4, -1], [0, -1, 4]])
-b = np.array([1, 2, 3])
-x0 = np.zeros_like(b)
-
-x, nit, err = jacobi_solver(A, b, tol=1e-6)
-
-print(f"Solution: {x}")
-print(f"Iterations: {nit}")
-print(f"Final error: {err:.2e}")
-
