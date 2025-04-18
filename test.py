@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
-from scipy.linalg import hilbert
 import sys
 import os
 
@@ -39,26 +38,19 @@ def direct_solve_LU_pivot(A, b):
         print(f"Error in LU pivoting: {e}")
         return None, None, None, None
 
-
+# DA TOGLIERE PER INSERIRE MATRICI DI TEST
 def generate_test_matrices(sizes):
     matrices = {}
-    
     for n in sizes:
         #Diagonally dominant tridiagonal matrix (well-conditioned)
         diag = np.ones(n) * 4
         off_diag = np.ones(n-1) * -1
         A_tridiag = np.diag(diag) + np.diag(off_diag, 1) + np.diag(off_diag, -1)
         matrices[f"Tridiagonal_{n}"] = (A_tridiag, f"Tridiagonal Matrix (n={n})")
-        
         #Random SPD matrix (medium condition number)
         A_random = np.random.rand(n, n)
         A_random = A_random + A_random.T + n * np.eye(n)  # Make it SPD
-        matrices[f"Random_SPD_{n}"] = (A_random, f"Random SPD Matrix (n={n})")
-        
-        #Hilbert matrix (ill-conditioned)
-        A_hilbert = hilbert(n)
-        matrices[f"Hilbert_{n}"] = (A_hilbert, f"Hilbert Matrix (n={n})")
-        
+        matrices[f"Random_SPD_{n}"] = (A_random, f"Random SPD Matrix (n={n})")        
     return matrices
 
 def compare_methods(matrices, tolerances, max_iterations):
@@ -286,20 +278,20 @@ def generate_report(results, plot_files):
     return report
 
 def main():
+    #TEST SU MATRICI IMPORTATE
     
-    sizes = [50, 100, 500, 1000]  #Matrix sizes
     tolerances = [1e-6, 1e-8, 1e-10, 1e-14]  #Convergence tolerances
     max_iterations = 10000  #Maximum iterations for iterative methods
     
-    matrices = generate_test_matrices(sizes)
-    results = compare_methods(matrices, tolerances, max_iterations)
-    plot_files = plot_results(results)
-    report = generate_report(results, plot_files)
+    #matrices = generate_test_matrices(sizes) 
+    #results = compare_methods(matrices, tolerances, max_iterations)
+    #plot_files = plot_results(results)
+    #report = generate_report(results, plot_files)
     
     with open("numerical_methods_comparison.md", "w") as f:
-        f.write(report)
+        #f.write(report)
     
-    print("Comparison complete! Results saved to 'numerical_methods_comparison.md'")
+    #print("Comparison complete! Results saved to 'numerical_methods_comparison.md'")
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+    #main()

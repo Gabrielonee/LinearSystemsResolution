@@ -16,10 +16,8 @@ def factorization(A):
             #Swap rows
             A[[n, max_row], :] = A[[max_row, n], :]
             L[[n, max_row], :] = L[[max_row, n], :]
-
         for i in range(n + 1, N):
             L[i, n] = A[i, n] / A[n, n]
             A[i, n:] -= L[i, n] * A[n, n:]
-
     U = np.triu(A)
     return L, U
