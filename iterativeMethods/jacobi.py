@@ -34,16 +34,3 @@ def jacobi(A, b, x0, tol, nmax):
     err = np.linalg.norm(xnew - xold, np.inf)
     
     return xnew, nit, elapsed_time, err
-
-A = np.array([[4, -1, 0], [-1, 4, -1], [0, -1, 4]])
-b = np.array([1, 2, 3])
-x0 = np.zeros_like(b)
-tol = 1e-6
-nmax = 10000
-
-x, nit, time_elapsed, err = jacobi(A, b, x0, tol, nmax)
-
-print(f"Solution: {x}")
-print(f"Iterations: {nit}")
-print(f"Time elapsed: {time_elapsed:.6f} seconds")
-print(f"Final error: {err:.2e}")
