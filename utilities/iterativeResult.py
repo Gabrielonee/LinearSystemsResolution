@@ -6,4 +6,3 @@ import numpy as np
 class IterativeResult:
     solution: np.ndarray
     iterations: int
-    error: np.floating

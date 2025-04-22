@@ -1,10 +1,9 @@
 import numpy as np
 import scipy.sparse as sp
 from utilities.iterativeResult import IterativeResult
-from utilities.common import verify_accuracy
 
 
-def jor_solver(A_sparse, b, x0, tol, nmax, omega=0.5):
+def jor_solver(A_sparse, b, x0, tol: float, nmax: int, omega: float = 0.5):
     """
     JOR (Jacobi Over-Relaxation) method for solving linear systems Ax = b.
 
@@ -25,8 +24,9 @@ def jor_solver(A_sparse, b, x0, tol, nmax, omega=0.5):
 
     Returns:
     --------
-    IterativeResult object containing solution vector,
-    iteration count, and error
+    IterativeResult object containing:
+        - Solution vector
+        - Number of iterations performed
     """
     # Extract diagonal elements
     D = A_sparse.diagonal()
@@ -61,8 +61,4 @@ def jor_solver(A_sparse, b, x0, tol, nmax, omega=0.5):
         # Update solution
         x_new = x_next
 
-    # Calculate final error using verify_accuracy with solution of all ones
-    x_true = np.ones_like(x_new)
-    err = verify_accuracy(x_new, x_true)
-
-    return IterativeResult(x_new, nit + 1, err)
+    return IterativeResult(x_new, nit + 1)

@@ -1,10 +1,9 @@
 import scipy.sparse as sp
 import numpy as np
-from utilities.common import verify_accuracy
 from utilities.iterativeResult import IterativeResult
 
 
-def jacobi_solver(A_sparse, b, x0, tol, nmax):
+def jacobi_solver(A_sparse, b, x0, tol: float, nmax: int):
     """
     Jacobi iterative method for solving linear systems Ax = b
 
@@ -26,7 +25,6 @@ def jacobi_solver(A_sparse, b, x0, tol, nmax):
     IterativeResult object containing:
         - Solution vector
         - Number of iterations performed
-        - Error estimate
     """
     # Extract diagonal elements
     D = A_sparse.diagonal()
@@ -55,8 +53,4 @@ def jacobi_solver(A_sparse, b, x0, tol, nmax):
 
         x0 = x_new.copy()
 
-    # Calculate final error using verify_accuracy with solution of all ones
-    x_true = np.ones_like(x0)
-    err = verify_accuracy(x0, x_true)
-
-    return IterativeResult(x0, nit + 1, err)
+    return IterativeResult(x0, nit + 1)

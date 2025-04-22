@@ -1,9 +1,8 @@
 import numpy as np
 from utilities.iterativeResult import IterativeResult
-from utilities.common import verify_accuracy
 
 
-def con_gradient_solver(A_sparse, b, x0, tol, nmax):
+def con_gradient_solver(A_sparse, b, x0, tol: float, nmax: int):
     """
     Conjugate Gradient method for solving sparse linear systems Ax = b
 
@@ -22,8 +21,9 @@ def con_gradient_solver(A_sparse, b, x0, tol, nmax):
 
     Returns:
     --------
-    IterativeResult object containing solution vector, iteration count,
-    and error
+    IterativeResult object containing:
+        - Solution vector
+        - Number of iterations performed
     """
     # Initialize residual and search direction
     r = b - A_sparse @ x0
@@ -69,10 +69,5 @@ def con_gradient_solver(A_sparse, b, x0, tol, nmax):
         # Increment iteration counter
         nit += 1
 
-    # Calculate final error using verify_accuracy with solution of all ones
-    x_true = np.ones_like(x0)
-    final_err = verify_accuracy(x0, x_true)
-
     # Return result
-    return IterativeResult(x0, nit, final_err)
-
+    return IterativeResult(x0, nit)

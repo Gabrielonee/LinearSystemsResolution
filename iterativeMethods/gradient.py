@@ -1,6 +1,5 @@
 import numpy as np
 from utilities.iterativeResult import IterativeResult
-from utilities.common import verify_accuracy
 
 
 def gradient_sparse(A_sparse, b, x0, tol, nmax):
@@ -22,8 +21,9 @@ def gradient_sparse(A_sparse, b, x0, tol, nmax):
 
     Returns:
     --------
-    IterativeResult object containing solution vector,
-    iteration count, and error
+    IterativeResult object containing:
+        - Solution vector
+        - Number of iterations performed
     """
     # Calculate initial residual
     r = b - A_sparse @ x0
@@ -63,8 +63,4 @@ def gradient_sparse(A_sparse, b, x0, tol, nmax):
         # Increment iteration counter
         nit += 1
 
-    # Calculate final error using verify_accuracy with solution of all ones
-    x_true = np.ones_like(x0)
-    err = verify_accuracy(x0, x_true)
-
-    return IterativeResult(x0, nit, err)
+    return IterativeResult(x0, nit)

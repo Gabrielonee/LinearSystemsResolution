@@ -2,17 +2,15 @@ import numpy as np
 import scipy.sparse as sp
 import scipy.sparse.linalg as spla
 from utilities.iterativeResult import IterativeResult
-from utilities.common import verify_accuracy
 
 
-def gauss_seidel_solver(A, b, x0, tol, nmax):
+def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):
     """
     Gauss-Seidel method for solving linear systems Ax = b.
-    Works with both dense and sparse matrices.
 
     Parameters:
     -----------
-    A : array_like or sparse matrix
+    A : sparse matrix
         The coefficient matrix
     b : array_like
         The right-hand side vector
@@ -25,11 +23,10 @@ def gauss_seidel_solver(A, b, x0, tol, nmax):
 
     Returns:
     --------
-    IterativeResult object containing solution vector,
-    iteration count, and error
+    IterativeResult object containing:
+        - Solution vector
+        - Number of iterations performed
     """
-    # Convert A to sparse if it isn't already
-    A_sparse = sp.csr_matrix(A) if not sp.issparse(A) else A
 
     # Extract lower triangular part of A (including diagonal)
     L = sp.tril(A_sparse)  # Lower triangular + diagonal
@@ -59,9 +56,5 @@ def gauss_seidel_solver(A, b, x0, tol, nmax):
         # Update solution for next iteration
         x0 = x_new.copy()
 
-    # Calculate final error using verify_accuracy with solution of all ones
-    x_true = np.ones_like(x0)
-    err = verify_accuracy(x0, x_true)
-
     # Return result
-    return IterativeResult(x0, nit + 1, err)
+    return IterativeResult(x0, nit + 1)
