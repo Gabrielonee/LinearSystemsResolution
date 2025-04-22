@@ -1,6 +1,5 @@
 import numpy as np
-import scipy.io
-import scipy.sparse as sp
+import scipy
 
 
 def MatrixReader(filePath=None):
