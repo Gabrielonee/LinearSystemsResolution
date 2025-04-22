@@ -1,4 +1,5 @@
 import numpy as np
+from utilities import iterativeResult as IR
 
 
 def con_gradient_sparse(A_sparse, b, x0, tol, nmax):
@@ -24,4 +25,4 @@ def con_gradient_sparse(A_sparse, b, x0, tol, nmax):
         nit += 1
         err = np.linalg.norm(r) / np.linalg.norm(r)
 
-    return x0, nit, err
+    return IR.IterativeResult(x0, nit, err)

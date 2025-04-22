@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.sparse as sp
+from utilities import iterativeResult as IR
 
 
 def jor_solver(A_sparse, b, x0, tol, nmax, omega=0.5):
@@ -24,4 +25,4 @@ def jor_solver(A_sparse, b, x0, tol, nmax, omega=0.5):
 
     err = np.linalg.norm(b - A_sparse @ x_new) / np.linalg.norm(x_new)
 
-    return x_new, nit, err
+    return IR.IterativeResult(x0, nit, err)

@@ -1,5 +1,6 @@
 import scipy.sparse as sp
 import numpy as np
+from utilities import iterativeResult as IR
 
 
 def jacobi_solver(A_sparse, b, x0, tol, nmax):
@@ -21,4 +22,4 @@ def jacobi_solver(A_sparse, b, x0, tol, nmax):
 
     err = np.linalg.norm(x_new - x0, np.inf)
 
-    return x_new, nit, err
+    return IR.IterativeResult(x0, nit, err)
