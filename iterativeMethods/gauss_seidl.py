@@ -40,14 +40,3 @@ def gauss_seidel_solver(A, b, x0=None, tol=1e-6, nmax=10000):
     err = np.linalg.norm(b - A_sparse @ x_new) / np.linalg.norm(x_new)
 
     return x_new, nit,  err
-
-
-A = np.array([[4, -1, 0], [-1, 4, -1], [0, -1, 4]])
-b = np.array([1, 2, 3])
-x0 = np.zeros_like(b)
-
-x, nit, err = gauss_seidel_solver(A, b)
-
-print(f"Solution: {x}")
-print(f"Iteration: {nit}")
-print(f"Relative residual error: {err:.2e}")

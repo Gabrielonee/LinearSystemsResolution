@@ -11,10 +11,7 @@ def jacobi_solver(A, b, tol=1e-6, x0=None, nmax=20000):
     else:
         x = x0.copy()
 
-    if (not sp.issparse(A)):
-        A_sparse = sp.csr_matrix(A)
-    else:
-        A_sparse = A
+    A_sparse = sp.csr_matrix(A) if not sp.issparse(A) else A
 
     D = A_sparse.diagonal()
     R = A_sparse - sp.diags(D)

@@ -1,29 +1,27 @@
 import numpy as np
-import time
+import scipy.sparse as sp
 
-def gradient(A, b, x0, tol=1e-6, nmax=1000):
-    if A.shape[0] != A.shape[1]:
-        raise ValueError("Matrix A is not a square matrix")
-    if x0.shape[0] != A.shape[0]:
-        raise ValueError("Different sizes")
-    
-    #Matrix SPD
-    if not np.allclose(A, A.T):
-        raise ValueError("Matrix A has to be symmestric")
-    if np.any(np.linalg.eigvals(A) <= 0):
-        raise ValueError("Matrix A has to be SPD")
-    
-    xk = x0.copy()
-    residue = b - A @ xk
+
+def gradient_sparse(A_sparse, b, x0=None, tol=1e-6, nmax=1000):
+    if not sp.isspmatrix(A_sparse):
+        raise ValueError("A must be a sparse matrix")
+
+    # Verifica simmetria
+    if not (A_sparse != A_sparse.T).nnz == 0:
+        raise ValueError("Matrix A must be symmetric")
+
+    # Inizializza vettore x0
+    if x0 is None:
+        x0 = np.zeros_like(b)
+    r = b - A_sparse @ x0
     nit = 0
-    start_time = time.time()
-    
-    while np.linalg.norm(residue) > tol and nit < nmax:
-        alpha = (residue.T @ residue) / (residue.T @ A @ residue)
-        xk = xk + alpha * residue
-        residue = b - A @ xk
+
+    while np.linalg.norm(r) > tol and nit < nmax:
+        Ar = A_sparse @ r
+        alpha = np.dot(r, r) / np.dot(r, Ar)
+        x0 = x0 + alpha * r
+        r = b - A_sparse @ x0
         nit += 1
-    
-    end_time = time.time()
-    err = np.linalg.norm(b - A @ xk) / np.linalg.norm(xk)
-    return xk, nit, end_time - start_time, err
+
+    err = np.linalg.norm(b - A_sparse @ x0) / np.linalg.norm(x0)
+    return x0, nit, err
