@@ -1,5 +1,5 @@
 import numpy as np
-import scipy
+import scipy.io
 
 
 def MatrixReader(filePath=None):

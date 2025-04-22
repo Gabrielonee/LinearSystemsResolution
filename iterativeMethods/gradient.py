@@ -1,18 +1,7 @@
 import numpy as np
-import scipy.sparse as sp
 
 
-def gradient_sparse(A_sparse, b, x0=None, tol=1e-6, nmax=1000):
-    if not sp.isspmatrix(A_sparse):
-        raise ValueError("A must be a sparse matrix")
-
-    # Verifica simmetria
-    if not (A_sparse != A_sparse.T).nnz == 0:
-        raise ValueError("Matrix A must be symmetric")
-
-    # Inizializza vettore x0
-    if x0 is None:
-        x0 = np.zeros_like(b)
+def gradient_sparse(A_sparse, b, x0, tol, nmax):
     r = b - A_sparse @ x0
     nit = 0
 
