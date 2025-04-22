@@ -12,5 +12,7 @@ def MatrixReader(filePath=None):
 
 # Funzione per verificare l'accuratezza
 def verify_accuracy(x_computed, x_true):
-    error = np.linalg.norm(x_computed - x_true, ord=np.inf)  # Calcola l'errore
+    x_computed_vale = x_computed.solution
+    error = np.linalg.norm(x_computed_vale - x_true,
+                           ord=np.inf)  # Calcola l'errore
     return error
