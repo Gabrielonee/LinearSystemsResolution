@@ -1,28 +1,78 @@
 import numpy as np
-from utilities import iterativeResult as IR
+from utilities.iterativeResult import IterativeResult
+from utilities.common import verify_accuracy
 
 
-def con_gradient_sparse(A_sparse, b, x0, tol, nmax):
+def con_gradient_solver(A_sparse, b, x0, tol, nmax):
+    """
+    Conjugate Gradient method for solving sparse linear systems Ax = b
+
+    Parameters:
+    -----------
+    A_sparse : sparse matrix
+        The coefficient matrix (should be symmetric positive definite)
+    b : ndarray
+        Right-hand side vector
+    x0 : ndarray
+        Initial guess for the solution
+    tol : float
+        Relative tolerance for convergence
+    nmax : int
+        Maximum number of iterations
+
+    Returns:
+    --------
+    IterativeResult object containing solution vector, iteration count,
+    and error
+    """
+    # Initialize residual and search direction
     r = b - A_sparse @ x0
     p = r.copy()
-    nit = 0
+
+    # Calculate initial error for convergence check
     norm_b = np.linalg.norm(b)
-    err = np.linalg.norm(r) / norm_b if norm_b != 0 else np.linalg.norm(r)
+    err = np.linalg.norm(r) / norm_b if norm_b > 0 else np.linalg.norm(r)
+
+    # Iteration counter
+    nit = 0
+
+    # Store the first r dot product
+    r_dot_r = np.dot(r, r)
 
     while nit < nmax and err > tol:
         Ap = A_sparse @ p
-        alpha = np.dot(r, r)
-        denom = np.dot(p, Ap)
-        if denom == 0:
-            break  # evita divisione per zero
-        alpha /= denom
 
+        # Calculate step size
+        alpha = r_dot_r / np.dot(p, Ap)
+
+        # Update solution
         x0 = x0 + alpha * p
-        r_new = r - alpha * Ap
-        beta = np.dot(r_new, r_new) / np.dot(r, r)
-        p = r_new + beta * p
-        r = r_new
-        nit += 1
-        err = np.linalg.norm(r) / np.linalg.norm(r)
 
-    return IR.IterativeResult(x0, nit, err)
+        # Update residual
+        r_new = r - alpha * Ap
+
+        # Calculate error for convergence check
+        err = np.linalg.norm(r_new) / \
+            norm_b if norm_b > 0 else np.linalg.norm(r_new)
+
+        # Calculate beta using Fletcher-Reeves formula
+        r_dot_r_new = np.dot(r_new, r_new)
+        beta = r_dot_r_new / r_dot_r
+
+        # Update search direction
+        p = r_new + beta * p
+
+        # Update residual and its dot product for next iteration
+        r = r_new
+        r_dot_r = r_dot_r_new
+
+        # Increment iteration counter
+        nit += 1
+
+    # Calculate final error using verify_accuracy with solution of all ones
+    x_true = np.ones_like(x0)
+    final_err = verify_accuracy(x0, x_true)
+
+    # Return result
+    return IterativeResult(x0, nit, final_err)
+

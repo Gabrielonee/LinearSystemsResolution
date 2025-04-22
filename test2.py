@@ -1,6 +1,5 @@
-
 import os
-from utilities import common as cm
+from utilities.common import MatrixReader, verify_accuracy
 from iterativeMethods import jacobi
 import numpy as np
 import tracemalloc
@@ -20,7 +19,7 @@ for file in os.listdir(directory):
         matrixPath = os.path.join(os.fsdecode(directory), filename)
 
         # Caricamento della matrice sparsa dal file .mtx
-        A_sparse = cm.MatrixReader(matrixPath)
+        A_sparse = MatrixReader(matrixPath)
 
         # Verifica che la matrice sia stata caricata correttamente
         if A_sparse is None:
@@ -52,7 +51,7 @@ for file in os.listdir(directory):
         tracemalloc.stop()
 
         # Verifica l’accuratezza della soluzione ottenuta rispetto a x_true
-        sparse_error = cm.verify_accuracy(sol_sparse, x_true)
+        sparse_error = verify_accuracy(sol_sparse, x_true)
 
         # Stampa dei risultati
         print(f"    Tempo: {elapsed_time:.6f} s")
