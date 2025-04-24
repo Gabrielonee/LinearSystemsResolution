@@ -10,6 +10,10 @@ class IterativeResult:
 
 @dataclass
 class SolverResult:
-    result: IterativeResult
+    method_name: str
+    tol: float
+    max_iterations: int
+    method_result: IterativeResult
+    rel_error: np.floating
     time_seconds: float
     memory_kb: float

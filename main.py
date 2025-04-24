@@ -1,4 +1,5 @@
 import os
+
 from utilities.common import MatrixReader
 from solver import solver_matrix
 
@@ -18,4 +19,7 @@ for file in os.listdir(directory):
 
         # Caricamento della matrice sparsa dal file .mtx
         A_sparse = MatrixReader(matrixPath)
-        solver_matrix(A_sparse, )
+        responses = solver_matrix(A_sparse)
+
+        for response in responses:
+            print(response)

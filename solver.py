@@ -1,43 +1,50 @@
 import numpy as np
-from utilities.common import verify_accuracy
-from iterativeMethods import jacobi
-import tracemalloc
-import time
+from utilities.metrics import verify_accuracy
+from iterativeMethods import jacobi, gauss_seidl, gradient, con_gradient
+from utilities.classes import SolverResult
+from utilities.validation import validate_matrix
+from utilities.profiling import profile_solver
 
 
-def solver_matrix(matrix, solution=None):
-    # Verifica che la matrice sia stata caricata correttamente
-    if matrix is None:
-        raise ValueError("MatrixReader failed to load the matrix")
+def solver_matrix(matrix, solution=None, tol=1e-10, nmax=20000):
+    rows = validate_matrix(matrix)
+    results = {}
 
-    # Verifica che la matrice abbia attributo `.shape` valido
-    if not hasattr(matrix, 'shape') or matrix.shape is None:
-        raise ValueError("Loaded matrix is invalid or missing shape info.")
-
-    # Estrai dimensioni della matrice
-    rows, cols = matrix.shape
-
-    if rows != cols:
-        raise ValueError("Matrix is not square. Cannot proceed.")
-
-    # Genera vettore soluzione "vera" x e calcola b = A*x
+    # Soluzione vera e membro destro
     x_true = solution if solution is not None else np.ones(rows)
-    b = matrix @ x_true  # Assicura che x_true sia la soluzione esatta
+    b = matrix @ x_true
 
-    # Misura tempo e memoria per il metodo Jacobi in versione sparsa
-    tracemalloc.start()
-    start_time = time.time()
-    sol_sparse = jacobi.jacobi_solver(
-        matrix, b, x0=np.zeros_like(b), tol=1e-10, nmax=10000)
-    elapsed_time = time.time() - start_time
-    peak_memory = tracemalloc.get_traced_memory()[1]
-    tracemalloc.stop()
+    # Dizionario dei metodi
+    solvers = {
+        "Jacobi": jacobi.jacobi_solver,
+        "GaussSeidel": gauss_seidl.gauss_seidel_solver,
+        "Gradient": gradient.gradient_solver,
+        "ConjugateGradient": con_gradient.conjugate_gradient_solver
+    }
 
-    # Verifica l’accuratezza della soluzione ottenuta rispetto a x_true
-    sparse_error = verify_accuracy(sol_sparse.solution, x_true)
+    for name, method in solvers.items():
+        try:
+            sol, elapsed_time, peak_memory = profile_solver(
+                method,
+                matrix, b,
+                x0=np.zeros_like(b),
+                tol=tol,
+                nmax=nmax
+            )
 
-    # Stampa dei risultati
-    print(f"    Tempo: {elapsed_time:.6f} s")
-    print(f"    Memoria: {peak_memory / 1e6:.2f} MB")
-    print(f"    Errore relativo: {sparse_error:.2e}")
-    print("—" * 60)
+            rel_error = verify_accuracy(sol.solution, x_true)
+
+            results[name] = SolverResult(
+                method_name=name,
+                tol=tol,
+                max_iterations=nmax,
+                method_result=sol,
+                rel_error=rel_error,
+                time_seconds=elapsed_time,
+                memory_kb=peak_memory
+            )
+        except Exception as e:
+            results[name] = f"Error: {str(e)}"
+
+    return results
+

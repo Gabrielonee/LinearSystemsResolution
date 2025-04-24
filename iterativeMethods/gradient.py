@@ -2,7 +2,7 @@ import numpy as np
 from utilities.classes import IterativeResult
 
 
-def gradient_sparse(A_sparse, b, x0, tol, nmax):
+def gradient_solver(A_sparse, b, x0, tol, nmax):
     """
     Steepest Descent (gradient) method for solving sparse linear systems Ax = b
 
