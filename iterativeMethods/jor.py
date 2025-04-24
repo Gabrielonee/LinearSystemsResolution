@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.sparse as sp
-from utilities.iterativeResult import IterativeResult
+from utilities.classes import IterativeResult
 
 
 def jor_solver(A_sparse, b, x0, tol: float, nmax: int, omega: float = 0.5):

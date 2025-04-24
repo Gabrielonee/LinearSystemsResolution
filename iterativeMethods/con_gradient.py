@@ -1,5 +1,5 @@
 import numpy as np
-from utilities.iterativeResult import IterativeResult
+from utilities.classes import IterativeResult
 
 
 def con_gradient_solver(A_sparse, b, x0, tol: float, nmax: int):

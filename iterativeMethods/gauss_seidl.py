@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.sparse as sp
 import scipy.sparse.linalg as spla
-from utilities.iterativeResult import IterativeResult
+from utilities.classes import IterativeResult
 
 
 def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):

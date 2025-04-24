@@ -1,5 +1,5 @@
 import numpy as np
-from utilities.iterativeResult import IterativeResult
+from utilities.classes import IterativeResult
 
 
 def gradient_sparse(A_sparse, b, x0, tol, nmax):
