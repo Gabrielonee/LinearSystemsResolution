@@ -42,9 +42,9 @@ def solver_matrix(matrix, solution=None, tol=1e-10, nmax=20000):
                 rel_error=rel_error,
                 time_seconds=elapsed_time,
                 memory_kb=peak_memory
-            )
+            ).to_dict()
+
         except Exception as e:
             results[name] = f"Error: {str(e)}"
 
     return results
-
