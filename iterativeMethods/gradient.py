@@ -4,26 +4,26 @@ from utilities.classes import IterativeResult
 
 def gradient_solver(A_sparse, b, x0, tol, nmax):
     """
-    Steepest Descent (gradient) method for solving sparse linear systems Ax = b
+    Metodo della discesa più ripida (gradiente) per la risoluzione di sistemi lineari sparsi Ax = b
 
-    Parameters:
+    Parametri:
     -----------
-    A_sparse : sparse matrix
-        The coefficient matrix (should be symmetric positive definite)
+    A_sparse : matrice sparsa
+    La matrice dei coefficienti (dovrebbe essere simmetrica definita positiva)
     b : ndarray
-        Right-hand side vector
+    Vettore del lato destro
     x0 : ndarray
-        Initial guess for the solution
+    Stima iniziale per la soluzione
     tol : float
-        Tolerance for convergence
+    Tolleranza per la convergenza
     nmax : int
-        Maximum number of iterations
+    Numero massimo di iterazioni
 
-    Returns:
+    Restituisce:
     --------
-    IterativeResult object containing:
-        - Solution vector
-        - Number of iterations performed
+    Oggetto IterativeResult contenente:
+    - Vettore della soluzione
+    - Numero di iterazioni eseguite
     """
     # Calculate initial residual
     r = b - A_sparse @ x0

@@ -4,9 +4,11 @@ from utilities.common import MatrixReader
 from solver import solver_matrix
 from utilities.classes import SolverResult
 
-FOLDER_PATH = "/Users/fraromeo/Documents/02_Areas/University/LM/LM_24-25/SEM2/MdCS/dati"
+FOLDER_PATH = "/Users/fraromeo/Documents/02_Areas/\
+University/LM/LM_24-25/SEM2/MdCS/dati"
 directory = os.fsencode(FOLDER_PATH)
 tol_array = [1e-4, 1e-6, 1e-8, 1e-10]
+tol_array = [1e-4]
 
 # Iterazione su tutti i file della directory
 for file in os.listdir(directory):

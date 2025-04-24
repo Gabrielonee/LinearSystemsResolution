@@ -3,33 +3,34 @@ import scipy.io
 
 def MatrixReader(filePath=None):
     """
-    Reads a matrix from a Matrix Market (.mtx) file.
+    Legge una matrice da un file in formato Matrix Market (.mtx).
 
-    Parameters:
+    Parametri
     ----------
     filePath : str
-    Path to the file containing the matrix to read
+        Percorso del file contenente la matrice da leggere.
 
-    Returns:
-    --------
-    scipy.sparse.csr_matrix or numpy.ndarray
-    The matrix read from the file
+    Ritorna
+    -------
+    scipy.sparse.csr_matrix o numpy.ndarray
+        La matrice letta dal file.
 
-    Raises:
+    Solleva
     -------
     ValueError
-    If the file path is not specified
+        Se il percorso del file non è stato specificato.
+
     IOError
-    If errors occur while reading the file
+        Se si verificano errori durante la lettura del file.
     """
     if filePath is None:
-        raise ValueError("Path file not provided! Use a valid path")
+        raise ValueError(
+            "Percorso del file non specificato. Fornire un path valido.")
 
     try:
-        # Lettura matrice in formato Matrix Market
+        # Lettura della matrice in formato Matrix Market
         A = scipy.io.mmread(filePath)
-
         return A
 
     except Exception as e:
-        raise IOError(f"Error reading matrix file: {str(e)}")
+        raise IOError(f"Errore nella lettura del file della matrice: {str(e)}")

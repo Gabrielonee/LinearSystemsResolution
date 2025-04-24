@@ -6,26 +6,26 @@ from utilities.classes import IterativeResult
 
 def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):
     """
-    Gauss-Seidel method for solving linear systems Ax = b.
+    Metodo di Gauss-Seidel per la risoluzione di sistemi lineari Ax = b.
 
-    Parameters:
+    Parametri:
     -----------
-    A : sparse matrix
-        The coefficient matrix
+    A : matrice sparsa
+    La matrice dei coefficienti
     b : array_like
-        The right-hand side vector
+    Il vettore del lato destro
     x0 : array_like
-        Initial guess for the solution
+    Stima iniziale per la soluzione
     tol : float
-        Convergence tolerance
+    Tolleranza di convergenza
     nmax : int
-        Maximum number of iterations
+    Numero massimo di iterazioni
 
-    Returns:
+    Restituisce:
     --------
-    IterativeResult object containing:
-        - Solution vector
-        - Number of iterations performed
+    Oggetto IterativeResult contenente:
+    - Vettore della soluzione
+    - Numero di iterazioni eseguite
     """
 
     # Extract lower triangular part of A (including diagonal)

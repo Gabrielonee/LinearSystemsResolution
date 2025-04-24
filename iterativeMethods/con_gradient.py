@@ -4,26 +4,26 @@ from utilities.classes import IterativeResult
 
 def conjugate_gradient_solver(A_sparse, b, x0, tol: float, nmax: int):
     """
-    Conjugate Gradient method for solving sparse linear systems Ax = b
+    Metodo del gradiente coniugato per la risoluzione di sistemi lineari sparsi
 
-    Parameters:
+    Parametri:
     -----------
-    A_sparse : sparse matrix
-        The coefficient matrix (should be symmetric positive definite)
+    A_sparse : matrice sparsa
+    La matrice dei coefficienti (dovrebbe essere simmetrica definita positiva)
     b : ndarray
-        Right-hand side vector
+    Vettore del lato destro
     x0 : ndarray
-        Initial guess for the solution
+    Valore iniziale per la soluzione
     tol : float
-        Relative tolerance for convergence
+    Tolleranza relativa per la convergenza
     nmax : int
-        Maximum number of iterations
+    Numero massimo di iterazioni
 
-    Returns:
+    Restituisce:
     --------
-    IterativeResult object containing:
-        - Solution vector
-        - Number of iterations performed
+    Oggetto IterativeResult contenente:
+    - Vettore della soluzione
+    - Numero di iterazioni eseguite
     """
     # Initialize residual and search direction
     r = b - A_sparse @ x0
