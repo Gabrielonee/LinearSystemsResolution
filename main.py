@@ -3,12 +3,13 @@ from utilities.plotter import plot_performance
 from utilities.common import MatrixReader
 from solver import solver_matrix
 from utilities.classes import SolverResult
+from utilities.save_to_json import save_results_to_json
+
 
 FOLDER_PATH = "/Users/fraromeo/Documents/02_Areas/\
 University/LM/LM_24-25/SEM2/MdCS/dati"
 directory = os.fsencode(FOLDER_PATH)
 tol_array = [1e-4, 1e-6, 1e-8, 1e-10]
-tol_array = [1e-4]
 
 # Iterazione su tutti i file della directory
 for file in os.listdir(directory):
@@ -26,3 +27,5 @@ for file in os.listdir(directory):
                     all_results.append(result)
 
         plot_performance(all_results, matrix_name=filename.replace(".mtx", ""))
+        save_results_to_json(
+            all_results, matrix_name=filename.replace(".mtx", ""))
