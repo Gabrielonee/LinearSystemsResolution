@@ -1,6 +1,12 @@
 1. IMPORTARE LE MATRICI SU TEST.PY
-  - controllare se il metodo @ è parallelo o meno 
-  -
+  - controllare se il metodo @ è parallelo o meno
 2. PLOTTARE RISULTATI SU CONDIZIONI RICHIESTE
-3. INIZIO STESURA RELAZIONE SU TEORIA (PREFAZIONE) 
+3. INIZIO STESURA RELAZIONE SU TEORIA (PREFAZIONE)
+- Parte teorica dei metodi fatta! 
+
 4. INIZIO STESURA RELAZIONE SU RISULTATI OTTENUTI
+- Inserire i risultati dei metodi (a codice terminato)
+
+CHECK AGGIUNTIVI:
+1. x_new = spla.spsolve_triangular(L, rhs, lower=True) #file gauss_seidel per definire se utilizzare il metodo od importare i metodi diretti
+2. eliminare JOR.py
