@@ -84,4 +84,3 @@ def solver_matrix(matrix, solution=None, tol=1e-10, nmax=20000):
             results[name] = f"Error: {str(e)}"
 
     return results
-
