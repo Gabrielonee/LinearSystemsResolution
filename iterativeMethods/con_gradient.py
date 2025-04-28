@@ -1,36 +1,73 @@
 import numpy as np
-import time
+from utilities.classes import IterativeResult
 
-def con_gradient(A, b, x0, tol, nmax):
-    M, N = A.shape
-    L = len(x0)
 
-    #Check Matrix's property
-    if M != N:
-        raise ValueError("Matrix not square")
-    elif L != M:
-        raise ValueError("Matrix's size != x0 size")
-    elif np.any(np.linalg.eigvals(A) <= 0):
-        raise ValueError("Matrix not SPD")
+def conjugate_gradient_solver(A_sparse, b, x0, tol: float, nmax: int):
+    """
+    Metodo del gradiente coniugato per la risoluzione di sistemi lineari sparsi
 
+    Parametri:
+    -----------
+    A_sparse : matrice sparsa
+    La matrice dei coefficienti (dovrebbe essere simmetrica definita positiva)
+    b : ndarray
+    Vettore del lato destro
+    x0 : ndarray
+    Valore iniziale per la soluzione
+    tol : float
+    Tolleranza relativa per la convergenza
+    nmax : int
+    Numero massimo di iterazioni
+
+    Restituisce:
+    --------
+    Oggetto IterativeResult contenente:
+    - Vettore della soluzione
+    - Numero di iterazioni eseguite
+    """
+    # Initialize residual and search direction
+    r = b - A_sparse @ x0
+    p = r.copy()
+
+    # Calculate initial error for convergence check
+    norm_b = np.linalg.norm(b)
+    err = np.linalg.norm(r) / norm_b if norm_b > 0 else np.linalg.norm(r)
+
+    # Iteration counter
     nit = 0
-    err = 1
-    xold = x0.copy()
-    rold = b - A @ xold
-    pold = rold.copy()
 
-    start_time = time.time()
+    # Store the first r dot product
+    r_dot_r = np.dot(r, r)
+
     while nit < nmax and err > tol:
-        step = (pold.T @ rold) / (pold.T @ A @ pold)
-        xnew = xold + step * pold
-        rnew = rold - step * A @ pold
-        beta = (A @ pold).T @ rnew / ((A @ pold).T @ pold)
-        pnew = rnew - beta * pold
-        err = np.linalg.norm(b - A @ xnew) / np.linalg.norm(xnew)
-        xold = xnew
-        rold = rnew
-        pold = pnew
+        Ap = A_sparse @ p
+
+        # Calculate step size
+        alpha = r_dot_r / np.dot(p, Ap)
+
+        # Update solution
+        x0 = x0 + alpha * p
+
+        # Update residual
+        r_new = r - alpha * Ap
+
+        # Calculate error for convergence check
+        err = np.linalg.norm(r_new) / \
+            norm_b if norm_b > 0 else np.linalg.norm(r_new)
+
+        # Calculate beta using Fletcher-Reeves formula
+        r_dot_r_new = np.dot(r_new, r_new)
+        beta = r_dot_r_new / r_dot_r
+
+        # Update search direction
+        p = r_new + beta * p
+
+        # Update residual and its dot product for next iteration
+        r = r_new
+        r_dot_r = r_dot_r_new
+
+        # Increment iteration counter
         nit += 1
-    total_time = time.time() - start_time
-    xk = xnew
-    return xk, nit, total_time, err
+
+    # Return result
+    return IterativeResult(x0, nit)

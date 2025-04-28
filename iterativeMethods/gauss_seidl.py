@@ -1,36 +1,60 @@
 import numpy as np
-import time
-from directMethods import triang_inf
+import scipy.sparse as sp
+import scipy.sparse.linalg as spla
+from utilities.classes import IterativeResult
 
-def gauss_seidl(A, b, x0, tol, nmax):
-    M, N = A.shape
-    L = x0.shape[0]
-    
-    if M != N:
-        print('Matrix A has to be square')
-        return None, None, None, None
-    elif L != M:
-        print('shape(A) != shape(x0)')
-        return None, None, None, None
-    
-    if np.any(np.diag(A) == 0):
-        print('At least a diagonal entry is zero')
-        return None, None, None, None
-    
-    L_matrix = np.tril(A) #Lower triangular
-    B = A - L_matrix
-    xold = x0.copy()
-    xnew = x0.copy() 
+
+def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):
+    """
+    Metodo di Gauss-Seidel per la risoluzione di sistemi lineari Ax = b.
+
+    Parametri:
+    -----------
+    A : matrice sparsa
+    La matrice dei coefficienti
+    b : array_like
+    Il vettore del lato destro
+    x0 : array_like
+    Stima iniziale per la soluzione
+    tol : float
+    Tolleranza di convergenza
+    nmax : int
+    Numero massimo di iterazioni
+
+    Restituisce:
+    --------
+    Oggetto IterativeResult contenente:
+    - Vettore della soluzione
+    - Numero di iterazioni eseguite
+    """
+
+    # Extract lower triangular part of A (including diagonal)
+    L = sp.tril(A_sparse)  # Lower triangular + diagonal
+    R = A_sparse - L       # Upper triangular (excluding diagonal)
+
+    # Convert L to CSC format for efficient triangular solves
+    L = L.tocsc()
+
+    # Initialize iteration counter
     nit = 0
 
-    start_time = time.time()
-    while nit < nmax:
-        xold = xnew.copy()
-        xnew = triang_inf(L_matrix, b - B @ xold)
-        if np.linalg.norm(xnew - xold, np.inf) < tol:
-            break
-        nit += 1
+    # Initialize solution vector
+    x_new = x0.copy()
 
-    elapsed_time = time.time() - start_time
-    err = np.linalg.norm(b - A @ xnew) / np.linalg.norm(xnew)
-    return xnew, nit, elapsed_time, err
+    # Iterative solution
+    for nit in range(nmax):
+        # Compute right-hand side for the current iteration
+        rhs = b - R @ x_new
+
+        # Solve the lower triangular system
+        x_new = spla.spsolve_triangular(L, rhs, lower=True)
+
+        # Check convergence
+        if np.linalg.norm(x_new - x0, np.inf) < tol:
+            break
+
+        # Update solution for next iteration
+        x0 = x_new.copy()
+
+    # Return result
+    return IterativeResult(x0, nit + 1)

@@ -1,33 +1,64 @@
-import time
 import numpy as np
+import scipy.sparse as sp
+from utilities.classes import IterativeResult
 
-def jor(A, b, x0, tol, nmax, omega):
-    M, N = A.shape
-    L = x0.shape[0]
-    
-    if M != N:
-        print('Matrix A is not a square matrix')
-        return None, None, None, None
-    elif L != M:
-        print('Dimensions of matrix A does not match dimension of initial guess x0')
-        return None, None, None, None
-    
-    D = np.diag(np.diag(A))
-    B = A - D  # (L+U)
-    xold = x0.copy()
-    xnew = x0.copy()
-    nit = 0  # iteration number
 
-    start_time = time.time()
-    while nit < nmax:
-        xold = xnew.copy()
-        xnew = np.linalg.solve(D, b - B @ xold)  # D^-1 * (b - B * xold)
-        xnew = omega * xnew + (1 - omega) * xold
-        
-        if np.linalg.norm(xnew - xold, np.inf) < tol:
+def jor_solver(A_sparse, b, x0, tol: float, nmax: int, omega: float = 0.5):
+    """
+    JOR (Jacobi Over-Relaxation) method for solving linear systems Ax = b.
+
+    Parameters:
+    -----------
+    A_sparse : sparse matrix
+        The coefficient matrix
+    b : ndarray
+        Right-hand side vector
+    x0 : ndarray
+        Initial guess for the solution
+    tol : float
+        Convergence tolerance
+    nmax : int
+        Maximum number of iterations
+    omega : float, optional
+        Relaxation parameter (default: 0.5)
+
+    Returns:
+    --------
+    IterativeResult object containing:
+        - Solution vector
+        - Number of iterations performed
+    """
+    # Extract diagonal elements
+    D = A_sparse.diagonal()
+
+    # Check for zeros in the diagonal
+    if np.any(np.abs(D) < 1e-10):
+        raise ValueError(
+            "Matrix has zeros on the diagonal - JOR method cannot be applied")
+
+    # Compute R = A - D
+    R = A_sparse - sp.diags(D)
+
+    # Initialize solution vector
+    x_new = x0.copy()
+
+    # Iteration counter
+    nit = 0
+
+    # Main iteration loop
+    for nit in range(nmax):
+        # Jacobi iteration
+        x_temp = (b - R @ x_new) / D
+
+        # Apply relaxation
+        x_next = omega * x_temp + (1 - omega) * x_new
+
+        # Check convergence
+        if np.linalg.norm(x_next - x_new, np.inf) < tol:
+            x_new = x_next
             break
-        nit += 1
-    
-    elapsed_time = time.time() - start_time
-    err = np.linalg.norm(b - A @ xnew) / np.linalg.norm(xnew)
-    return xnew, nit, elapsed_time, err
+
+        # Update solution
+        x_new = x_next
+
+    return IterativeResult(x_new, nit + 1)

@@ -1,36 +1,56 @@
+import scipy.sparse as sp
 import numpy as np
-import time
+from utilities.classes import IterativeResult
 
-def jacobi(A, b, x0, tol, nmax): 
-    M, N = A.shape
-    L = x0.shape[0]
-    
-    if M != N:
-        print('Matrix A is not a square matrix')
-        return None, None, None, None
-    elif L != M:
-        print('Dimensions of matrix A does not match dimension of initial guess x0')
-        return None, None, None, None
-    
-    if np.any(np.diag(A) == 0):
-        print('At least a diagonal entry is zero. The method automatically fails')
-        return None, None, None, None
-    
-    D = np.diag(np.diag(A)) #diagonal
-    B = D - A
-    
-    xold = x0.copy()
-    xnew = xold + 1 
-    nit = 0 #iteration number
-    
-    start_time = time.time()
-    
-    while np.linalg.norm(xnew - xold, np.inf) > tol and nit < nmax: #if over thresold or nmax
-        xold = xnew.copy()
-        xnew = np.linalg.inv(D) @ (B @ xold + b) #iterate the computing of solution
-        nit += 1
-    
-    elapsed_time = time.time() - start_time
-    err = np.linalg.norm(xnew - xold, np.inf)
-    
-    return xnew, nit, elapsed_time, err
+
+def jacobi_solver(A_sparse, b, x0, tol: float, nmax: int):
+    """
+    Jacobi iterative method for solving linear systems Ax = b
+
+    Parameters:
+    -----------
+    A_sparse : scipy.sparse matrix
+        The coefficient matrix
+    b : numpy.ndarray
+        The right-hand side vector
+    x0 : numpy.ndarray
+        Initial guess for the solution
+    tol : float
+        Convergence tolerance
+    nmax : int
+        Maximum number of iterations
+
+    Returns:
+    --------
+    IterativeResult object containing:
+        - Solution vector
+        - Number of iterations performed
+    """
+    # Extract diagonal elements
+    D = A_sparse.diagonal()
+
+    # Check for zeros in the diagonal (which would cause division by zero)
+    if np.any(np.abs(D) < 1e-10):
+        raise ValueError(
+            "Matrix has zeros on the diagonal -\
+            Jacobi method cannot be applied")
+
+    # Compute R = A - D
+    R = A_sparse - sp.diags(D)
+
+    # Initialize iteration counter and solution vector
+    nit = 0
+    x_new = x0.copy()  # Create a copy to avoid modifying the input
+
+    # Perform iterations
+    for nit in range(nmax):
+        x_new = (b - R @ x0) / D
+
+        # Check convergence
+        if np.linalg.norm(x_new - x0, np.inf) < tol:
+            x0 = x_new.copy()
+            break
+
+        x0 = x_new.copy()
+
+    return IterativeResult(x0, nit + 1)
