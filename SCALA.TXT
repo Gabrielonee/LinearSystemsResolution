@@ -8,5 +8,6 @@
 - Inserire i risultati dei metodi (a codice terminato)
 
 CHECK AGGIUNTIVI:
-1. x_new = spla.spsolve_triangular(L, rhs, lower=True) #file gauss_seidel per definire se utilizzare il metodo od importare i metodi diretti
-2. eliminare JOR.py
+1. x_new = spla.spsolve_triangular(L, rhs, lower=True) #file gauss_seidel per definire se utilizzare il metodo od importare i metodi diretti FATTO
+2. eliminare JOR.py FATTO
+3. Fixed comments FATTO
