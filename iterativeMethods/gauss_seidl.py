@@ -5,56 +5,27 @@ from utilities.classes import IterativeResult
 
 
 def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):
-    """
-    Metodo di Gauss-Seidel per la risoluzione di sistemi lineari Ax = b.
-
-    Parametri:
-    -----------
-    A : matrice sparsa
-    La matrice dei coefficienti
-    b : array_like
-    Il vettore del lato destro
-    x0 : array_like
-    Stima iniziale per la soluzione
-    tol : float
-    Tolleranza di convergenza
-    nmax : int
-    Numero massimo di iterazioni
-
-    Restituisce:
-    --------
-    Oggetto IterativeResult contenente:
-    - Vettore della soluzione
-    - Numero di iterazioni eseguite
-    """
-
+    # Same factorization as Jacobi
     # Extract lower triangular part of A (including diagonal)
     L = sp.tril(A_sparse)  # Lower triangular + diagonal
-    R = A_sparse - L       # Upper triangular (excluding diagonal)
+    N = A_sparse - L       # Upper triangular (excluding diagonal)
 
     # Convert L to CSC format for efficient triangular solves
     L = L.tocsc()
-
     # Initialize iteration counter
     nit = 0
-
     # Initialize solution vector
     x_new = x0.copy()
-
     # Iterative solution
     for nit in range(nmax):
         # Compute right-hand side for the current iteration
-        rhs = b - R @ x_new
-
+        rhs = b - N @ x_new
         # Solve the lower triangular system
         x_new = spla.spsolve_triangular(L, rhs, lower=True)
-
         # Check convergence
         if np.linalg.norm(x_new - x0, np.inf) < tol:
             break
-
         # Update solution for next iteration
         x0 = x_new.copy()
-
     # Return result
     return IterativeResult(x0, nit + 1)
