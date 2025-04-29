@@ -3,32 +3,8 @@ import tracemalloc
 
 
 def profile_solver(solver_func, *args, **kwargs):
-    """
-    Esegue una funzione di risoluzione del sistema lineare misurando
-    il tempo di esecuzione e la memoria massima utilizzata.
-
-    Parametri
-    ----------
-    solver_func : callable
-        Funzione del solver iterativo da profilare (es. jacobi_solver).
-
-    *args : tuple
-        Argomenti posizionali da passare alla funzione `solver_func`.
-
-    **kwargs : dict
-        Argomenti keyword da passare alla funzione `solver_func`.
-
-    Ritorna
-    -------
-    result : qualsiasi tipo
-        Risultato restituito dalla funzione solver.
-
-    elapsed_time : float
-        Tempo di esecuzione in secondi.
-
-    peak_memory : float
-        Memoria massima usata durante l'esecuzione, in kilobyte (KB).
-    """
+    #use a method to solve a linear system computing time and memory 
+    
     # Avvia tracciamento memoria e tempo
     tracemalloc.start()
     start_time = time.perf_counter()

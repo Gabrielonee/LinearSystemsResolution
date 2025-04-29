@@ -5,22 +5,6 @@ from pathlib import Path
 
 
 def plot_performance(results, matrix_name, output_dir="plots"):
-    """
-    Genera grafici delle metriche di performance (errore e tempo)
-    rispetto alla tolleranza,
-    e un grafico comparativo dell'uso di memoria tra metodi risolutivi.
-
-    Parametri
-    ----------
-    results : list of SolverResult
-        Lista dei risultati prodotti dalla funzione solver_matrix.
-
-    matrix_name : str
-        Nome della matrice (usato nel titolo del grafico e nel nome file).
-
-    output_dir : str, default="plots"
-        Cartella dove salvare i grafici generati (verrà creata se non esiste).
-    """
     # Creazione cartella se non esiste
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 

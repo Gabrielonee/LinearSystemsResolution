@@ -4,55 +4,36 @@ from scipy.sparse.linalg import eigsh
 
 
 def validate_matrix(matrix):
-    """
-    Verifica che una matrice sia adatta all'uso con metodi iterativi 
-    per matrici simmetriche e definite positive (SPD).
-
-    Parametri
-    ----------
-    matrix : ndarray o scipy.sparse matrix
-        Matrice da validare.
-
-    Ritorna
-    -------
-    int
-        Dimensione della matrice (numero di righe/colonne).
-
-    Solleva
-    -------
-    ValueError
-        Se la matrice è None, non ha attributo shape, non è quadrata,
-        non è simmetrica, oppure non è definita positiva.
-    """
+   #Validation: checking matrixs attrbiutes to check if fit into the methods
     if matrix is None:
-        raise ValueError("Matrix è None.")
+        raise ValueError("Matrix is None.")
 
     if not hasattr(matrix, 'shape') or matrix.shape is None:
-        raise ValueError("Matrice non valida o informazioni mancanti")
+        raise ValueError("Matrix not valid or missing infos")
 
     rows, cols = matrix.shape
     if rows != cols:
         raise ValueError("La matrice non è quadrate. Impossibile procedere")
 
-    # Simmetria
+    #Simmetry 
     if isspmatrix(matrix):
-        # Per matrici sparse
+        #For sparse matrix
         diff = matrix - matrix.T
         if diff.nnz != 0:
-            raise ValueError("La matrice non è simmetrica")
+            raise ValueError("No simmetry")
     else:
-        # Per matrici dense
+        #For dense matrix
         if not np.allclose(matrix, matrix.T, atol=1e-8):
-            raise ValueError("La matrice non è simmetrica")
+            raise ValueError("No simmetry")
 
-    # Verifica definita positiva
+    #Positive defined
     try:
-        # Usiamo solo il min autovalore, metodo efficiente per SPD
+        # Minimum eigenvalue
         min_eig = eigsh(matrix, k=1, which='SA', return_eigenvectors=False)[0]
         if min_eig <= 0:
-            raise ValueError("La matrice non è definita positiva")
+            raise ValueError("NOT SPD")
     except Exception as e:
         raise ValueError(
-            f"Impossibile verificare se la matrice è definita positiva: {e}")
+            f"Impossible to define the SPD: {e}")
 
     return rows
