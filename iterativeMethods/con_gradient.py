@@ -3,39 +3,16 @@ from utilities.classes import IterativeResult
 
 
 def conjugate_gradient_solver(A_sparse, b, x0, tol: float, nmax: int):
-    """
-    Metodo del gradiente coniugato per la risoluzione di sistemi lineari sparsi
-
-    Parametri:
-    -----------
-    A_sparse : matrice sparsa
-    La matrice dei coefficienti (dovrebbe essere simmetrica definita positiva)
-    b : ndarray
-    Vettore del lato destro
-    x0 : ndarray
-    Valore iniziale per la soluzione
-    tol : float
-    Tolleranza relativa per la convergenza
-    nmax : int
-    Numero massimo di iterazioni
-
-    Restituisce:
-    --------
-    Oggetto IterativeResult contenente:
-    - Vettore della soluzione
-    - Numero di iterazioni eseguite
-    """
     # Initialize residual and search direction
     r = b - A_sparse @ x0
-    p = r.copy()
+    p = r.copy() # first search direction is equal to residue
 
     # Calculate initial error for convergence check
-    norm_b = np.linalg.norm(b)
-    err = np.linalg.norm(r) / norm_b if norm_b > 0 else np.linalg.norm(r)
+    norm_b = np.linalg.norm(b) #useful to normalize the error
 
+    err = np.linalg.norm(r) / norm_b if norm_b > 0 else np.linalg.norm(r)
     # Iteration counter
     nit = 0
-
     # Store the first r dot product
     r_dot_r = np.dot(r, r)
 
@@ -43,7 +20,7 @@ def conjugate_gradient_solver(A_sparse, b, x0, tol: float, nmax: int):
         Ap = A_sparse @ p
 
         # Calculate step size
-        alpha = r_dot_r / np.dot(p, Ap)
+        alpha = r_dot_r / np.dot(p, Ap) #aim to minimize the error in the direction of p
 
         # Update solution
         x0 = x0 + alpha * p
