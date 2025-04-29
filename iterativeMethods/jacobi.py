@@ -2,41 +2,22 @@ import scipy.sparse as sp
 import numpy as np
 from utilities.classes import IterativeResult
 
-
 def jacobi_solver(A_sparse, b, x0, tol: float, nmax: int):
-    """
-    Jacobi iterative method for solving linear systems Ax = b
+    #A = P - N 
+    #P = D
+    #N = L+U
 
-    Parameters:
-    -----------
-    A_sparse : scipy.sparse matrix
-        The coefficient matrix
-    b : numpy.ndarray
-        The right-hand side vector
-    x0 : numpy.ndarray
-        Initial guess for the solution
-    tol : float
-        Convergence tolerance
-    nmax : int
-        Maximum number of iterations
-
-    Returns:
-    --------
-    IterativeResult object containing:
-        - Solution vector
-        - Number of iterations performed
-    """
     # Extract diagonal elements
-    D = A_sparse.diagonal()
+    P = A_sparse.diagonal()
 
     # Check for zeros in the diagonal (which would cause division by zero)
-    if np.any(np.abs(D) < 1e-10):
+    if np.any(np.abs(P) < 1e-10):
         raise ValueError(
             "Matrix has zeros on the diagonal -\
             Jacobi method cannot be applied")
 
-    # Compute R = A - D
-    R = A_sparse - sp.diags(D)
+    # Compute N = A - P --> N = L + U
+    N = A_sparse - sp.diags(P)
 
     # Initialize iteration counter and solution vector
     nit = 0
@@ -44,13 +25,10 @@ def jacobi_solver(A_sparse, b, x0, tol: float, nmax: int):
 
     # Perform iterations
     for nit in range(nmax):
-        x_new = (b - R @ x0) / D
-
+        x_new = (b - N @ x0) / P
         # Check convergence
         if np.linalg.norm(x_new - x0, np.inf) < tol:
             x0 = x_new.copy()
             break
-
         x0 = x_new.copy()
-
     return IterativeResult(x0, nit + 1)
