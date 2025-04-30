@@ -5,16 +5,42 @@ from pathlib import Path
 
 
 def plot_performance(results, matrix_name, output_dir="plots"):
-    # Creazione cartella se non esiste
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    """
+    Genera e salva grafici delle prestazioni degli algoritmi iterativi:
+    - Errore relativo e tempo di esecuzione in funzione della tolleranza.
+    - Confronto del consumo medio di memoria tra i metodi.
 
+    Parameters
+    ----------
+    results : list
+        Lista di oggetti `SolverResult` o simili, contenenti attributi:
+        - method_name: nome dell'algoritmo.
+        - tol: tolleranza usata.
+        - rel_error: errore relativo finale.
+        - time_seconds: tempo impiegato.
+        - memory_kb: memoria utilizzata (in KB).
+    matrix_name : str
+        Nome della matrice (utilizzato nei titoli e nomi dei file).
+    output_dir : str, optional
+        Cartella di output dove salvare i grafici. Default = "plots".
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    I grafici vengono salvati in PNG a 300 DPI.
+    I valori dell’asse x (tolleranza) sono in scala logaritmica.
+    La memoria è aggregata come media per metodo.
+    """
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
     sns.set_theme(style="whitegrid")
 
-    # Lista dei metodi presenti nei risultati
     methods = sorted(set(r.method_name for r in results))
     metrics = ["rel_error", "time_seconds"]
 
-    # 1. Plot Errore e Tempo vs Tolleranza
+    # Plot: Errore e Tempo vs Tolleranza
     for metric in metrics:
         plt.figure(figsize=(10, 6))
 
@@ -22,7 +48,6 @@ def plot_performance(results, matrix_name, output_dir="plots"):
             x_vals = [r.tol for r in results if r.method_name == method]
             y_vals = [getattr(r, metric)
                       for r in results if r.method_name == method]
-
             sns.lineplot(x=x_vals, y=y_vals, marker='o', label=method)
 
         plt.xscale("log")
@@ -42,8 +67,7 @@ def plot_performance(results, matrix_name, output_dir="plots"):
         plt.savefig(Path(output_dir) / f"{filename}.png", dpi=300)
         plt.close()
 
-    # 2. Grafico Comparativo Memoria
-    # Calcolo memoria media per metodo
+    # Plot: Memoria media per metodo
     memory_data = {
         method: sum(r.memory_kb for r in results if r.method_name == method) /
         len([r for r in results if r.method_name == method])
@@ -66,18 +90,17 @@ def plot_performance(results, matrix_name, output_dir="plots"):
     )
 
     plt.ylabel("Memoria media (KB)", fontsize=12)
-    plt.title(f"Confronto Memoria tra Metodi\n{matrix_name}",
-              fontsize=14, weight='bold')
+    plt.title(f"Confronto Memoria tra Metodi\n{
+              matrix_name}", fontsize=14, weight='bold')
     plt.xticks(rotation=45)
     plt.grid(axis='y')
     plt.tight_layout()
 
-    # Etichetta valore sopra ogni barra
     for bar in ax.patches:
         height = bar.get_height()
         ax.annotate(f"{height:.1f}",
                     xy=(bar.get_x() + bar.get_width() / 2, height),
-                    xytext=(0, 5),  # 5 points vertical offset
+                    xytext=(0, 5),
                     textcoords="offset points",
                     ha='center', va='bottom', fontsize=10)
 
