@@ -1,8 +1,7 @@
 import scipy.io
-import numpy as np
 
 
-def MatrixReader(filePath=None):
+def MatrixReader(filePath=None, debug=False):
     """
     Legge una matrice da file nel formato Matrix Market (.mtx) e stampa informazioni utili.
 
@@ -40,10 +39,11 @@ def MatrixReader(filePath=None):
         n_nonzeros = A.nnz
         sparsity = 100 * (1 - n_nonzeros / n_elements)
 
-        print(f"Nome: {filePath}")
-        print(f"Dimensione matrice: {shape[0]} x {shape[1]}")
-        print(f"Elementi non nulli: {n_nonzeros}")
-        print(f"Sparsità: {sparsity:.2f}%")
+        if debug:
+            print(f"Nome: {filePath}")
+            print(f"Dimensione matrice: {shape[0]} x {shape[1]}")
+            print(f"Elementi non nulli: {n_nonzeros}")
+            print(f"Sparsità: {sparsity:.2f}%")
 
         return A
 

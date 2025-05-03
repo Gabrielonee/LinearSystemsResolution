@@ -12,8 +12,7 @@ tol_array = [1e-4, 1e-6, 1e-8, 1e-10]
 resp = input("Use matrix files or a given one? (f or g): ")
 
 if resp == 'f':
-    FOLDER_PATH = ("/Users/fraromeo/Documents/02_Areas/University/"
-                   "LM/LM_24-25/SEM2/MdCS/dati")
+    FOLDER_PATH = ("./dati")
     directory = os.fsencode(FOLDER_PATH)
 
     # Iterazione su tutti i file della directory
@@ -23,8 +22,6 @@ if resp == 'f':
         if filename.endswith(".mtx"):
             matrixPath = os.path.join(os.fsdecode(directory), filename)
             A_sparse = MatrixReader(matrixPath)
-
-            """          
             all_results = []
             for tol in tol_array:
                 responses = solver_matrix(A_sparse, tol=tol)
@@ -36,7 +33,6 @@ if resp == 'f':
                 all_results, matrix_name=filename.replace(".mtx", ""))
             save_results_to_json(
                 all_results, matrix_name=filename.replace(".mtx", ""))
-            """
 
 else:
     size = int(input("matrix size: "))
