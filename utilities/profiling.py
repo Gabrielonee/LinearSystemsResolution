@@ -4,7 +4,8 @@ import tracemalloc
 
 def profile_solver(solver_func, *args, **kwargs):
     """
-    Esegue un solver per sistemi lineari tracciando tempo di esecuzione e memoria massima utilizzata.
+    Esegue un solver per sistemi lineari tracciando tempo di esecuzione e
+    memoria massima utilizzata.
 
     Parameters
     ----------

@@ -1,7 +1,7 @@
 import os
 from scipy.sparse import csr_matrix
 from utilities.plotter import plot_performance
-from utilities.common import MatrixReader
+from utilities.matrixReader import MatrixReader
 from solver import solver_matrix
 from utilities.classes import SolverResult
 from utilities.save_to_json import save_results_to_json
@@ -11,7 +11,7 @@ tol_array = [1e-4, 1e-6, 1e-8, 1e-10]
 
 resp = input("Use matrix files or a given one? (f or g): ")
 
-if resp == 'F':
+if resp == 'f':
     FOLDER_PATH = ("/Users/fraromeo/Documents/02_Areas/University/"
                    "LM/LM_24-25/SEM2/MdCS/dati")
     directory = os.fsencode(FOLDER_PATH)
@@ -24,6 +24,7 @@ if resp == 'F':
             matrixPath = os.path.join(os.fsdecode(directory), filename)
             A_sparse = MatrixReader(matrixPath)
 
+            """          
             all_results = []
             for tol in tol_array:
                 responses = solver_matrix(A_sparse, tol=tol)
@@ -35,6 +36,7 @@ if resp == 'F':
                 all_results, matrix_name=filename.replace(".mtx", ""))
             save_results_to_json(
                 all_results, matrix_name=filename.replace(".mtx", ""))
+            """
 
 else:
     size = int(input("matrix size: "))
@@ -56,4 +58,3 @@ else:
                      output_dir="plots_given")
     save_results_to_json(all_results, matrix_name="User Matrix",
                          output_dir="results_json_given")
-

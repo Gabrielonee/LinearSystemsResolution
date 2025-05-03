@@ -64,4 +64,3 @@ def jacobi_solver(A_sparse, b, x0, tol: float, nmax: int):
         x0 = x_new.copy()
 
     return IterativeResult(x0, nit + 1)
-
