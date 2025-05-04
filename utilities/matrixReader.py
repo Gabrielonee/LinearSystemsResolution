@@ -1,0 +1,51 @@
+import scipy.io
+
+
+def MatrixReader(filePath=None, debug=False):
+    """
+    Legge una matrice da file nel formato Matrix Market (.mtx) e stampa informazioni utili.
+
+    Parameters
+    ----------
+    filePath : str
+        Percorso del file .mtx da leggere.
+
+    Returns
+    -------
+    A : scipy sparse matrix
+        Matrice letta dal file nel formato sparso di SciPy.
+
+    Raises
+    ------
+    ValueError
+        Se il percorso non è fornito o è `None`.
+    IOError
+        Se si verifica un errore durante la lettura del file.
+
+    Notes
+    -----
+    Utilizza `scipy.io.mmread`, che restituisce una matrice sparsa
+    (`scipy.sparse`), ideale per problemi numerici su larga scala.
+    """
+    if filePath is None:
+        raise ValueError("Percorso non valido: `filePath` è None.")
+
+    try:
+        A = scipy.io.mmread(filePath)
+
+        # Informazioni sulla matrice
+        shape = A.shape
+        n_elements = shape[0] * shape[1]
+        n_nonzeros = A.nnz
+        sparsity = 100 * (1 - n_nonzeros / n_elements)
+
+        if debug:
+            print(f"Nome: {filePath}")
+            print(f"Dimensione matrice: {shape[0]} x {shape[1]}")
+            print(f"Elementi non nulli: {n_nonzeros}")
+            print(f"Sparsità: {sparsity:.2f}%")
+
+        return A
+
+    except Exception as e:
+        raise IOError(f"Errore durante la lettura della matrice: {str(e)}")

@@ -1,12 +1,12 @@
 import numpy as np
 from utilities.metrics import verify_accuracy
-from iterativeMethods import jacobi, gauss_seidl, gradient, con_gradient
+from iterativeMethods import gauss_seidel, jacobi, gradient, con_gradient
 from utilities.classes import SolverResult
 from utilities.validation import validate_matrix
 from utilities.profiling import profile_solver
 
 
-def solver_matrix(matrix, solution=None, tol=1e-10, nmax=20000):
+def solver_matrix(matrix, right_side=None, solution=None, tol=1e-10, nmax=20000):
     """
     Esegue tutti i metodi iterativi implementati per la risoluzione di
     un sistema lineare Ax = b,
@@ -16,6 +16,10 @@ def solver_matrix(matrix, solution=None, tol=1e-10, nmax=20000):
     ----------
     matrix : scipy.sparse matrix o numpy.ndarray
         Matrice dei coefficienti del sistema
+
+    right_side : numpy.ndarray, opzionale
+        Vettore relativo al lato destro del sistema lineare.
+        Se non fornito, verrà calcolato a bartire da A e x.
 
     solution : numpy.ndarray, opzionale
         Vettore soluzione "vera" x da usare per il calcolo di b = Ax
@@ -43,12 +47,12 @@ def solver_matrix(matrix, solution=None, tol=1e-10, nmax=20000):
 
     # Costruzione della soluzione esatta e del membro destro b = Ax
     x_true = solution if solution is not None else np.ones(rows)
-    b = matrix @ x_true
+    b = right_side if right_side is not None else matrix @ x_true
 
     # Definizione dei metodi iterativi disponibili
     solvers = {
         "Jacobi": jacobi.jacobi_solver,
-        "GaussSeidel": gauss_seidl.gauss_seidel_solver,
+        "GaussSeidel": gauss_seidel.gauss_seidel_solver,
         "Gradient": gradient.gradient_solver,
         "ConjugateGradient": con_gradient.conjugate_gradient_solver
     }
