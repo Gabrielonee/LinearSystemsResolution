@@ -16,6 +16,10 @@ def plot_performance(results, matrix_name, output_dir="plots"):
         Lista di oggetti `SolverResult` o simili, contenenti attributi:
         - method_name: nome dell'algoritmo.
         - tol: tolleranza usata.
+        - max_iteration: iterazioni massime
+        - method_result: classe `IterativeResult` che contiene:
+            - solution: array della solution
+            - iterations: numero di ietarzioni eseguite ` ` ` `
         - rel_error: errore relativo finale.
         - time_seconds: tempo impiegato.
         - memory_kb: memoria utilizzata (in KB).
@@ -38,16 +42,23 @@ def plot_performance(results, matrix_name, output_dir="plots"):
     sns.set_theme(style="whitegrid")
 
     methods = sorted(set(r.method_name for r in results))
-    metrics = ["rel_error", "time_seconds"]
+    metrics = ["rel_error", "time_seconds", "iterations"]
 
-    # Plot: Errore e Tempo vs Tolleranza
+    # Plot: Errore, Tempo e Iterazioni vs Tolleranza
     for metric in metrics:
         plt.figure(figsize=(10, 6))
 
         for method in methods:
             x_vals = [r.tol for r in results if r.method_name == method]
-            y_vals = [getattr(r, metric)
-                      for r in results if r.method_name == method]
+
+            if metric == "iterations":
+                y_vals = [
+                    r.method_result.iterations for r in results if
+                    r.method_name == method]
+            else:
+                y_vals = [getattr(r, metric)
+                          for r in results if r.method_name == method]
+
             sns.lineplot(x=x_vals, y=y_vals, marker='o', label=method)
 
         plt.xscale("log")
@@ -56,9 +67,8 @@ def plot_performance(results, matrix_name, output_dir="plots"):
 
         plt.xlabel("Tolleranza", fontsize=12)
         plt.ylabel(metric.replace("_", " ").title(), fontsize=12)
-        plt.title(f"{metric.replace('_', ' ').title()} vs \
-        Tolleranza\n{matrix_name}",
-                  fontsize=14, weight='bold')
+        plt.title(f"{metric.replace('_', ' ').title()} vs Tolleranza\n{
+            matrix_name}", fontsize=14, weight='bold')
         plt.legend(title="Metodo")
         plt.grid(True)
         plt.tight_layout()

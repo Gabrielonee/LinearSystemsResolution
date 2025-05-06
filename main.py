@@ -41,11 +41,15 @@ else:
         for j in range(size):
             dense_matrix[i][j] = float(input(f"value of {i},{j} cell: "))
 
+    right_side = [0.0 for _ in range(size)]
+    for i in range(size):
+        right_side[i] = float(input(f"value of {i}-row result: "))
+
     A_sparse = csr_matrix(dense_matrix)
 
     all_results = []
     for tol in tol_array:
-        responses = solver_matrix(A_sparse, tol=tol)
+        responses = solver_matrix(A_sparse, tol=tol, right_side=right_side)
         for method_name, result in responses.items():
             if isinstance(result, SolverResult):
                 all_results.append(result)
