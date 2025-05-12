@@ -6,7 +6,8 @@ from utilities.validation import validate_matrix
 from utilities.profiling import profile_solver
 
 
-def solver_matrix(matrix, right_side=None, solution=None, tol=1e-10, nmax=20000):
+def solver_matrix(matrix, right_side=None, solution=None,
+                  tol=1e-10, nmax=20000):
     """
     Esegue tutti i metodi iterativi implementati per la risoluzione di
     un sistema lineare Ax = b,
