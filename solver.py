@@ -1,6 +1,6 @@
 import numpy as np
 from utilities.metrics import verify_accuracy
-from iterativeMethods import gauss_seidel, jacobi, gradient, con_gradient
+from iterativeMethods import gauss_seidel, jacobi, gradient, con_gradient, gauss_seidel_lib
 from utilities.classes import SolverResult
 from utilities.validation import validate_matrix
 from utilities.profiling import profile_solver
@@ -54,6 +54,7 @@ def solver_matrix(matrix, right_side=None, solution=None,
     solvers = {
         "Jacobi": jacobi.jacobi_solver,
         "GaussSeidel": gauss_seidel.gauss_seidel_solver,
+        "GaussSeidelLib": gauss_seidel_lib.gauss_seidel_solver_library,
         "Gradient": gradient.gradient_solver,
         "ConjugateGradient": con_gradient.conjugate_gradient_solver
     }
