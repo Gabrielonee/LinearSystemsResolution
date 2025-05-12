@@ -1,6 +1,4 @@
 import scipy.io
-from scipy.sparse import csr_matrix
-
 
 def MatrixReader(filePath=None, debug=False):
     """
