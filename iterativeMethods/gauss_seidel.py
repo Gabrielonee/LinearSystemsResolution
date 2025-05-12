@@ -2,7 +2,7 @@ import numpy as np
 import scipy.sparse as sp
 import scipy.sparse.linalg as spla
 from utilities.classes import IterativeResult
-
+from directMethods.trian_inf import solve_lower_triangular
 
 def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):
     """
@@ -56,7 +56,7 @@ def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):
         # Compute right-hand side for the current iteration
         rhs = b - N @ x_new
         # Solve the lower triangular system
-        x_new = spla.spsolve_triangular(L, rhs, lower=True)
+        x_new = solve_lower_triangular(L, rhs)
         # Check convergence
         if np.linalg.norm(x_new - x0, np.inf) < tol:
             break
