@@ -55,6 +55,6 @@ else:
                 all_results.append(result)
 
     plot_performance(all_results, matrix_name="User Matrix",
-                     output_dir="plots_given")
+                     output_dir="output/plots_given")
     save_results_to_json(all_results, matrix_name="User Matrix",
-                         output_dir="results_json_given")
+                         output_dir="output/results_json_given")

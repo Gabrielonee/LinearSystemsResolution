@@ -2,7 +2,8 @@ import json
 from pathlib import Path
 
 
-def save_results_to_json(results, matrix_name, output_dir="results_json"):
+def save_results_to_json(results, matrix_name,
+                         output_dir="output/results_json"):
     """
     Salva una lista di oggetti SolverResult in formato JSON,
     uno per ogni matrice risolta.

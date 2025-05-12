@@ -4,7 +4,7 @@ import pandas as pd
 from pathlib import Path
 
 
-def plot_performance(results, matrix_name, output_dir="plots"):
+def plot_performance(results, matrix_name, output_dir="output/plots"):
     """
     Genera e salva grafici delle prestazioni degli algoritmi iterativi:
     - Errore relativo e tempo di esecuzione in funzione della tolleranza.
