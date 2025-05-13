@@ -53,6 +53,7 @@ def gauss_seidel_solver_library(A_sparse, b, x0, tol: float, nmax: int):
     for nit in range(nmax):
         # Compute right-hand side for the current iteration
         rhs = b - N @ x_new
+        #print(f"Iteration {nit + 1}: rhs = {rhs}")
         # Solve the lower triangular system
         x_new = spla.spsolve_triangular(L, rhs, lower = True)
         # Check convergence
