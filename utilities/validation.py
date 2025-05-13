@@ -1,4 +1,3 @@
-from scipy.sparse import isspmatrix_csr
 from scipy.sparse.linalg import eigsh
 
 
@@ -32,10 +31,6 @@ def validate_matrix(matrix):
     """
     if matrix is None:
         raise ValueError("La matrice è None.")
-
-    if not isspmatrix_csr(matrix):
-        raise ValueError("La matrice deve essere in formato CSR.")
-
     rows, cols = matrix.shape
     if rows != cols:
         raise ValueError("La matrice non è quadrata.")
