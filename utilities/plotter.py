@@ -117,3 +117,47 @@ def plot_performance(results, matrix_name, output_dir="output/plots"):
     filename = f"{matrix_name}_memory_comparison".replace(' ', '_')
     plt.savefig(Path(output_dir) / f"{filename}.png", dpi=300)
     plt.close()
+
+    # Plot: Iterazioni per metodo e tolleranza
+    iterations_data = []
+    
+    for method in methods:
+        for tol in sorted(set(r.tol for r in results)):
+            method_tol_results = [r for r in results if r.method_name == method and r.tol == tol]
+            if method_tol_results:
+                for r in method_tol_results:
+                    iterations_data.append({
+                        'Metodo': method,
+                        'Tolleranza': tol,
+                        'Iterazioni': r.method_result.iterations
+                    })
+    
+    iterations_df = pd.DataFrame(iterations_data)
+    
+    plt.figure(figsize=(12, 7))
+    palette = sns.color_palette("husl", len(methods))
+    ax = sns.barplot(
+        data=iterations_df,
+        x='Tolleranza',
+        y='Iterazioni',
+        hue='Metodo',
+        palette=palette
+    )
+    
+    tol_values = sorted(iterations_df['Tolleranza'].unique())
+    plt.xticks(range(len(tol_values)), [f"{x:.0e}" for x in tol_values], rotation=45)
+    
+    plt.ylabel("Numero di Iterazioni", fontsize=12)
+    plt.xlabel("Tolleranza", fontsize=12)
+    plt.title(f"Confronto Numero di Iterazioni per Tolleranza\n{matrix_name}", 
+              fontsize=14, weight='bold')
+    plt.legend(title="Metodo", loc='upper right')
+    plt.grid(axis='y')
+    plt.tight_layout()
+    
+    for container in ax.containers:
+        ax.bar_label(container, fmt='%.0f', fontsize=8)
+    
+    filename = f"{matrix_name}_iterations_comparison".replace(' ', '_')
+    plt.savefig(Path(output_dir) / f"{filename}.png", dpi=300)
+    plt.close()
