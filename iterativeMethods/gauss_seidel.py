@@ -1,8 +1,7 @@
 import numpy as np
 import scipy.sparse as sp
-import scipy.sparse.linalg as spla
 from utilities.classes import IterativeResult
-from directMethods.trian_inf import solve_lower_triangular
+from directMethods.trian_inf import triang_inf
 
 def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):
     """
@@ -35,33 +34,27 @@ def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):
     ----
     La matrice A dovrebbe essere almeno debolmente diagonalmente dominante per
     garantire convergenza.
-    Il metodo usa `spsolve_triangular` per risolvere il sistema triangolare
-    inferiore in modo efficiente.
     """
-    # Same factorization as Jacobi
-    # Extract lower triangular part of A (including diagonal)
-    L = sp.tril(A_sparse)  # Lower triangular + diagonal
-    N = A_sparse - L       # Upper triangular (excluding diagonal)
-
-    # Convert L to CSC format for efficient triangular solves
-    L = L.tocsc()
-
-    # Initialize iteration counter
-    nit = 0
+    # Dimensione del sistema
+    n = A_sparse.shape[0]
+    # Estrai le parti della matrice A
+    D = sp.spdiags(A_sparse.diagonal(), 0, n, n)  # Diagonale
+    L = sp.tril(A_sparse, k=-1)                   # Triangolare inferiore stretta
+    U = sp.triu(A_sparse, k=1)                    # Triangolare superiore stretta
+    # La parte da invertire è D+L
+    DL = D + L
     # Initialize solution vector
-    x_new = x0.copy()
-
+    x = x0.copy()
     # Iterative solution
-    for nit in range(nmax):
-        # Compute right-hand side for the current iteration
-        rhs = b - N @ x_new
-        # Solve the lower triangular system
-        x_new = solve_lower_triangular(L, rhs)
-        # Check convergence
-        if np.linalg.norm(x_new - x0, np.inf) < tol:
-            break
-        # Update solution for next iteration
-        x0 = x_new.copy()
-
-    # Return result
-    return IterativeResult(x0, nit + 1)
+    for it in range(1, nmax+1):
+        x_old = x.copy()  # Salva la soluzione precedente per il test di convergenza
+        # Calcola il termine noto per questa iterazione: b - U*x
+        rhs = b - U @ x
+        #(D+L)x = rhs
+        x = triang_inf(DL.toarray(), rhs)
+        # Check convergence using infinity norm
+        error = np.linalg.norm(x - x_old, np.inf)
+        print(f"Iteration {it}: x = {x}, error = {error}") #debug 
+        if error < tol:
+            return IterativeResult(x, it)
+    return IterativeResult(x, nmax)
