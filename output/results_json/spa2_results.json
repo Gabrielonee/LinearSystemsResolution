@@ -5,7 +5,7 @@
         "max_iterations": 20000,
         "performed_iterations": 69,
         "rel_error": 4.1488941424860926e-05,
-        "time_seconds": 0.09173183399980189,
+        "time_seconds": 0.09521649999805959,
         "memory_kb": 38436.55078125
     },
     {
@@ -13,9 +13,9 @@
         "tolerance": 0.0001,
         "max_iterations": 20000,
         "performed_iterations": 12,
-        "rel_error": 1.261293972265598e-05,
-        "time_seconds": 0.35157629099921905,
-        "memory_kb": 105512.1728515625
+        "rel_error": 1.261293975107769e-05,
+        "time_seconds": 2.061904249996587,
+        "memory_kb": 71768.9873046875
     },
     {
         "method": "GaussSeidelLib",
@@ -23,8 +23,8 @@
         "max_iterations": 20000,
         "performed_iterations": 12,
         "rel_error": 4.6505531428708835e-05,
-        "time_seconds": 0.107893749998766,
-        "memory_kb": 79821.31640625
+        "time_seconds": 0.10790437499963446,
+        "memory_kb": 79821.20703125
     },
     {
         "method": "Gradient",
@@ -32,7 +32,7 @@
         "max_iterations": 20000,
         "performed_iterations": 161,
         "rel_error": 0.43614056341622376,
-        "time_seconds": 0.26667733400245197,
+        "time_seconds": 0.27002754099521553,
         "memory_kb": 117.9140625
     },
     {
@@ -41,7 +41,7 @@
         "max_iterations": 20000,
         "performed_iterations": 42,
         "rel_error": 0.305853964070258,
-        "time_seconds": 0.036189333000947954,
+        "time_seconds": 0.036629832997277845,
         "memory_kb": 165.0078125
     },
     {
@@ -50,17 +50,17 @@
         "max_iterations": 20000,
         "performed_iterations": 90,
         "rel_error": 3.915191276737673e-07,
-        "time_seconds": 0.11218733299756423,
-        "memory_kb": 38436.53515625
+        "time_seconds": 0.12159833300393075,
+        "memory_kb": 38436.31640625
     },
     {
         "method": "GaussSeidel",
         "tolerance": 1e-06,
         "max_iterations": 20000,
         "performed_iterations": 15,
-        "rel_error": 2.5138308501482243e-07,
-        "time_seconds": 0.42595408399938606,
-        "memory_kb": 105511.8701171875
+        "rel_error": 2.5138311343653186e-07,
+        "time_seconds": 2.5201820000002044,
+        "memory_kb": 71768.6435546875
     },
     {
         "method": "GaussSeidelLib",
@@ -68,8 +68,8 @@
         "max_iterations": 20000,
         "performed_iterations": 15,
         "rel_error": 9.273497689754606e-07,
-        "time_seconds": 0.1256173330002639,
-        "memory_kb": 79821.31640625
+        "time_seconds": 0.13167829199664993,
+        "memory_kb": 79821.20703125
     },
     {
         "method": "Gradient",
@@ -77,7 +77,7 @@
         "max_iterations": 20000,
         "performed_iterations": 1949,
         "rel_error": 0.029506550262531794,
-        "time_seconds": 3.2174704160024703,
+        "time_seconds": 3.2700594589987304,
         "memory_kb": 117.9453125
     },
     {
@@ -86,7 +86,7 @@
         "max_iterations": 20000,
         "performed_iterations": 122,
         "rel_error": 0.004431262376135114,
-        "time_seconds": 0.10315812499902677,
+        "time_seconds": 0.104671374996542,
         "memory_kb": 165.0078125
     },
     {
@@ -95,17 +95,17 @@
         "max_iterations": 20000,
         "performed_iterations": 111,
         "rel_error": 3.6946137260684964e-09,
-        "time_seconds": 0.1357674160026363,
-        "memory_kb": 38436.51953125
+        "time_seconds": 0.1484363330018823,
+        "memory_kb": 38436.30078125
     },
     {
         "method": "GaussSeidel",
         "tolerance": 1e-08,
         "max_iterations": 20000,
         "performed_iterations": 19,
-        "rel_error": 1.3577903246186906e-09,
-        "time_seconds": 0.5304920419985137,
-        "memory_kb": 105511.9990234375
+        "rel_error": 1.3578567159555632e-09,
+        "time_seconds": 3.1875236249979935,
+        "memory_kb": 71768.6279296875
     },
     {
         "method": "GaussSeidelLib",
@@ -113,8 +113,8 @@
         "max_iterations": 20000,
         "performed_iterations": 19,
         "rel_error": 5.0085644520692085e-09,
-        "time_seconds": 0.15612995799892815,
-        "memory_kb": 79821.31640625
+        "time_seconds": 0.16849749999528285,
+        "memory_kb": 79821.20703125
     },
     {
         "method": "Gradient",
@@ -122,7 +122,7 @@
         "max_iterations": 20000,
         "performed_iterations": 5087,
         "rel_error": 0.0003428500556008629,
-        "time_seconds": 8.389166832999763,
+        "time_seconds": 8.564779959000589,
         "memory_kb": 117.9453125
     },
     {
@@ -131,7 +131,7 @@
         "max_iterations": 20000,
         "performed_iterations": 196,
         "rel_error": 2.2200115338821824e-05,
-        "time_seconds": 0.16581987500103423,
+        "time_seconds": 0.16903391599771567,
         "memory_kb": 165.0078125
     },
     {
@@ -140,17 +140,17 @@
         "max_iterations": 20000,
         "performed_iterations": 131,
         "rel_error": 4.358002847482112e-11,
-        "time_seconds": 0.15937070800282527,
-        "memory_kb": 38436.50390625
+        "time_seconds": 0.17392724999808706,
+        "memory_kb": 38436.28515625
     },
     {
         "method": "GaussSeidel",
         "tolerance": 1e-10,
         "max_iterations": 20000,
         "performed_iterations": 22,
-        "rel_error": 2.7076341169163243e-11,
-        "time_seconds": 0.6203691660011827,
-        "memory_kb": 105512.681640625
+        "rel_error": 2.7095437005186795e-11,
+        "time_seconds": 3.6641773329974967,
+        "memory_kb": 71768.6044921875
     },
     {
         "method": "GaussSeidelLib",
@@ -158,8 +158,8 @@
         "max_iterations": 20000,
         "performed_iterations": 22,
         "rel_error": 9.979017612238295e-11,
-        "time_seconds": 0.17861870799970347,
-        "memory_kb": 79821.31640625
+        "time_seconds": 0.1840786669999943,
+        "memory_kb": 79821.20703125
     },
     {
         "method": "Gradient",
@@ -167,7 +167,7 @@
         "max_iterations": 20000,
         "performed_iterations": 8285,
         "rel_error": 3.623407205277651e-06,
-        "time_seconds": 13.657398584000475,
+        "time_seconds": 13.93623295800353,
         "memory_kb": 117.9453125
     },
     {
@@ -176,7 +176,7 @@
         "max_iterations": 20000,
         "performed_iterations": 240,
         "rel_error": 1.7779659577943363e-07,
-        "time_seconds": 0.20285037500070757,
+        "time_seconds": 0.20520354099426186,
         "memory_kb": 165.0078125
     }
 ]
