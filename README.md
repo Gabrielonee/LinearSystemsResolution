@@ -22,6 +22,7 @@ Per ogni metodo, vengono confrontate:
 - Tolleranza vs Errore
 - Iterazioni massime vs Tempo
 - Metodo vs Memoria
+- Numero di iterazioni vs Tolleranza
 ---
 
 ## 📌 Requisiti
