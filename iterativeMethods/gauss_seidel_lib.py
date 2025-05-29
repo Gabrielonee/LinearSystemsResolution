@@ -4,64 +4,25 @@ import scipy.sparse.linalg as spla
 from utilities.classes import IterativeResult
 
 def gauss_seidel_solver_library(A_sparse, b, x0, tol: float, nmax: int):
-    """
-    Risolve il sistema lineare Ax = b usando il metodo iterativo di
-    Gauss-Seidel per matrici sparse.
-
-    Parameters
-    ----------
-    A_sparse : scipy.sparse matrix
-        Matrice dei coefficienti A in formato sparso, preferibilmente quadrata
-        e a diagonale dominante.
-    b : ndarray
-        Vettore dei termini noti.
-    x0 : ndarray
-        Vettore iniziale della soluzione.
-    tol : float
-        Tolleranza per il criterio di arresto basato sulla norma infinito
-        della differenza tra iterazioni successive.
-    nmax : int
-        Numero massimo di iterazioni consentite.
-
-    Returns
-    -------
-    IterativeResult
-        Oggetto contenente:
-            - x : soluzione approssimata del sistema.
-            - nit : numero di iterazioni eseguite (1-based).
-
-    Note
-    ----
-    La matrice A dovrebbe essere almeno debolmente diagonalmente dominante per
-    garantire convergenza.
-    Il metodo usa `spsolve_triangular` per risolvere il sistema triangolare
-    inferiore in modo efficiente.
-    """
-    # Same factorization as Jacobi
-    # Extract lower triangular part of A (including diagonal)
-    L = sp.tril(A_sparse)  # Lower triangular + diagonal
-    N = A_sparse - L       # Upper triangular (excluding diagonal)
-
-    # Convert L to CSC format for efficient triangular solves
+    #Si suddivide A in L e N, dove L è la parte triangolare inferiore (inclusa la diagonale) e 
+    #N è la parte triangolare superiore
+    L = sp.tril(A_sparse)  
+    N = A_sparse - L       
+    #Converte L in formato CSC per rendere efficiente la risoluzione di sistemi triangolari
     L = L.tocsc()
-
-    # Initialize iteration counter
     nit = 0
-    # Initialize solution vector
     x_new = x0.copy()
-    # Iterative solution
     for nit in range(nmax):
-        # Compute right-hand side for the current iteration
+        #Aggiornamento del termine noto secondo la formula di Gauss-Seidel
         rhs = b - N @ x_new
-        #print(f"Iteration {nit + 1}: rhs = {rhs}")
-        # Solve the lower triangular system
+        #Si risolve il sistema triangolare inferiore Lx = rhs
         x_new = spla.spsolve_triangular(L, rhs, lower = True)
-        # Check convergence
-        if np.linalg.norm(x_new - x0, np.inf) < tol:
+        #Controlla la convergenza con norma due tra iterati successivi
+        if np.linalg.norm(x_new - x0) < tol:
             break
-        # Update solution for next iteration
+        #Aggiornamento soluzione
         x0 = x_new.copy()
 
-    # Return result
+    #Ritorna la soluzione e il numero di iterazioni eseguite
     return IterativeResult(x0, nit + 1)
 

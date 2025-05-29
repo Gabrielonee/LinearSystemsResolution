@@ -3,62 +3,34 @@ from utilities.classes import IterativeResult
 
 
 def gradient_solver(A_sparse, b, x0, tol, nmax):
-    """
-    Risolve il sistema lineare Ax = b con il metodo del gradiente
-    (steepest descent), adatto per matrici simmetriche definite positive.
-
-    Parameters
-    ----------
-    A_sparse : scipy.sparse matrix or ndarray
-        Matrice dei coefficienti A,
-        preferibilmente simmetrica definita positiva.
-    b : ndarray
-        Vettore dei termini noti.
-    x0 : ndarray
-        Vettore iniziale della soluzione.
-    tol : float
-        Tolleranza per il criterio di arresto,
-        applicata alla norma del residuo relativo.
-    nmax : int
-        Numero massimo di iterazioni consentite.
-
-    Returns
-    -------
-    IterativeResult
-        Oggetto contenente:
-            - x : soluzione approssimata.
-            - nit : numero di iterazioni eseguite.
-
-    Note
-    ----
-    Il metodo del gradiente semplice converge più lentamente rispetto al
-    gradiente coniugato, ma è utile per scopi didattici o come baseline.
-    L'arresto si basa sulla norma del residuo: ||r_k|| <= tol * ||b||.
-    """
-    # Calcolo residuo iniziale
+    #Calcolo del residuo iniziale r = b - Ax0
     r = b - A_sparse @ x0
-
-    # Norme iniziali
+    #Calcolo della norma 2 del residuo e del termine noto
     norm_r = np.linalg.norm(r)
     norm_b = np.linalg.norm(b)
+    #Definizione della tolleranza relativa: ||r_k|| <= tol * ||b||
     rel_tol = tol * norm_b if norm_b > 0 else tol
-
+    #Inizializzazione contatore di iterazioni
     nit = 0
-
+    
     while norm_r > rel_tol and nit < nmax:
+        # Calcola A * r_k (serve per denominatore di α_k)
         Ar = A_sparse @ r
+        #Calcola il numeratore e denominatore per α_k = (rᵏ ⋅ rᵏ) / (rᵏ ⋅ A rᵏ)
         r_dot_r = np.dot(r, r)
         r_dot_Ar = np.dot(r, Ar)
-
         if abs(r_dot_Ar) < 1e-14:
-            break  # evita divisione per zero
-
+            break
+        #Calcolo del passo α_k
         alpha = r_dot_r / r_dot_Ar
+        #Aggiornamento della soluzione: x_{k+1} = x_k + α_k * r_k
         x0 = x0 + alpha * r
-
+        #Calcolo del nuovo residuo r_{k+1} = b - A x_{k+1}
         r = b - A_sparse @ x0
+        #Calcolo della nuova norma del residuo
         norm_r = np.linalg.norm(r)
-
+        #Incremento del numero di iterazioni
         nit += 1
 
+    #Ritorna la soluzione e il numero di iterazioni
     return IterativeResult(x0, nit)
