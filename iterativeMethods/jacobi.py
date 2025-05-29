@@ -41,26 +41,20 @@ def jacobi_solver(A_sparse, b, x0, tol: float, nmax: int):
     solo se A è diagonalmente dominante o simmetrica definita positiva.
     """
     # Estrai gli elementi diagonali di A (matrice P)
-    P = A_sparse.diagonal()
+    D = A_sparse.diagonal()
+    if np.any(np.abs(D) < 1e-10):
+        raise ValueError("Matrice con zeri (o quasi) sulla diagonale: Jacobi non applicabile.")
 
-    # Verifica zeri nella diagonale
-    if np.any(np.abs(P) < 1e-10):
-        raise ValueError(
-            "Matrix has zeros on the diagonal"
-            "- Jacobi method cannot be applied"
-        )
-
-    # Calcola N = A - D (L + U)
-    N = A_sparse - sp.diags(P)
-
-    nit = 0
-    x_new = x0.copy()
-
+    D_inv = 1.0 / D
+    x = x0.copy()
+    norm_b = np.linalg.norm(b)
+    
     for nit in range(nmax):
-        x_new = (b - N @ x0) / P
-        if np.linalg.norm(x_new - x0, np.inf) < tol:
-            x0 = x_new.copy()
+        res = b - A_sparse @ x
+        res_rel = np.linalg.norm(res) / norm_b
+        if res_rel < tol:
             break
-        x0 = x_new.copy()
-
-    return IterativeResult(x0, nit + 1)
+        x = x + D_inv * res
+    else:
+        print("Metodo non converge entro il numero massimo di iterazioni.")
+    return IterativeResult(x, nit + 1)
