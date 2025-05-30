@@ -4,6 +4,8 @@ import scipy.sparse.linalg as spla
 from utilities.classes import IterativeResult
 
 def gauss_seidel_solver_library(A_sparse, b, x0, tol: float, nmax: int):
+    converged = False
+    
     #Si suddivide A in L e N, dove L è la parte triangolare inferiore (inclusa la diagonale) e 
     #N è la parte triangolare superiore
     L = sp.tril(A_sparse)  
@@ -19,10 +21,13 @@ def gauss_seidel_solver_library(A_sparse, b, x0, tol: float, nmax: int):
         x_new = spla.spsolve_triangular(L, rhs, lower = True)
         #Controlla la convergenza con norma due tra iterati successivi
         if np.linalg.norm(x_new - x0) < tol:
+            converged = True
             break
         #Aggiornamento soluzione
         x0 = x_new.copy()
 
     #Ritorna la soluzione e il numero di iterazioni eseguite
-    return IterativeResult(x0, nit + 1)
+    if not converged:
+        print("Metodo Gauss Seidel non converge entro il numero massimo di iterazioni.")
+    return IterativeResult(x0, nit + 1, converged)
 

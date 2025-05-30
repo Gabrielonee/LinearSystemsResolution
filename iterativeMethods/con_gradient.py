@@ -3,6 +3,7 @@ from utilities.classes import IterativeResult
 
 
 def conjugate_gradient_solver(A_sparse, b, x0, tol: float, nmax: int):
+    converged = False
     #Calcolo del residuo iniziale r₀ = b - A x₀
     r = b - A_sparse @ x0
 
@@ -54,4 +55,6 @@ def conjugate_gradient_solver(A_sparse, b, x0, tol: float, nmax: int):
         nit += 1
 
     #Ritorna soluzione approssimata e numero di iterazioni
-    return IterativeResult(x0, nit)
+    if nit >= nmax:
+        print("Metodo del Gradiente Coniugato non converge entro il numero massimo di iterazioni.")
+    return IterativeResult(x0, nit, converged=(err <= tol))

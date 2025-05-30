@@ -53,7 +53,7 @@ def solver_matrix(matrix, right_side=None, solution=None,
     # Definizione dei metodi iterativi disponibili
     solvers = {
         "Jacobi": jacobi.jacobi_solver,
-        "GaussSeidel": gauss_seidel.gauss_seidel_solver,
+        #"GaussSeidel": gauss_seidel.gauss_seidel_solver,
         "GaussSeidelLib": gauss_seidel_lib.gauss_seidel_solver_library,
         "Gradient": gradient.gradient_solver,
         "ConjugateGradient": con_gradient.conjugate_gradient_solver

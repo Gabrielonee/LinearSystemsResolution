@@ -3,6 +3,7 @@ from utilities.classes import IterativeResult
 
 
 def gradient_solver(A_sparse, b, x0, tol, nmax):
+    converged = False
     #Calcolo del residuo iniziale r = b - Ax0
     r = b - A_sparse @ x0
     #Calcolo della norma 2 del residuo e del termine noto
@@ -32,5 +33,11 @@ def gradient_solver(A_sparse, b, x0, tol, nmax):
         #Incremento del numero di iterazioni
         nit += 1
 
+    #Controllo di convergenza
+    if nit >= nmax:
+        print("Metodo del Gradiente non converge entro il numero massimo di iterazioni.")
+    else:
+        converged = True
+
     #Ritorna la soluzione e il numero di iterazioni
-    return IterativeResult(x0, nit)
+    return IterativeResult(x0, nit, converged)

@@ -27,7 +27,6 @@ def validate_matrix(matrix):
     - Supporta solo matrici in formato CSR.
     - La simmetria è verificata tramite confronto con la trasposta.
     - La definita positività è valutata con il minimo autovalore.
-    - La dominanza diagonale è verificata riga per riga senza conversioni.
     """
     if matrix is None:
         raise ValueError("La matrice è None.")
@@ -46,5 +45,6 @@ def validate_matrix(matrix):
             raise ValueError("La matrice non è definita positiva (SPD).")
     except Exception as e:
         raise ValueError(f"Errore durante la verifica SPD: {e}")
+    
 
     return rows
