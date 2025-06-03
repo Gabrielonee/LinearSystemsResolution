@@ -27,7 +27,7 @@ Argomenti della riga di comando
 -  -m o --mode: **obbligatorio**
 Scegliere la modalità di input:
 	- "file": leggere tutti i file .mtx da una cartella
-	- "manual": immissione manuale della matrice e del vettore laterale destro tramite la riga di comando.
+	- "manual": immissione manuale della matrice e del vettore X tramite la riga di comando.
 - -d o --data-dir: Opzionale, default="data"
 Percorso della directory contenente i file .mtx (usato solo in modalità file).
 
