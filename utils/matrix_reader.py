@@ -1,53 +1,54 @@
 import scipy.io
+from scipy.sparse import csr_matrix
 
-def MatrixReader(filePath=None, debug=False):
+
+def MatrixReader(file_path: str = None, debug: bool = False) -> csr_matrix:
     """
-    Legge una matrice da file nel formato Matrix Market (.mtx),
-    la converte in formato CSR e stampa informazioni utili.
+    Reads a matrix from a Matrix Market (.mtx) file and converts it to CSR format.
 
     Parameters
     ----------
-    filePath : str
-        Percorso del file .mtx da leggere.
-    debug : bool
-        Se True, stampa le informazioni sulla matrice letta.
+    file_path : str
+        Path to the .mtx file.
+    debug : bool, optional
+        If True, prints matrix information (default: False).
 
     Returns
     -------
     A : scipy.sparse.csr_matrix
-        Matrice letta e convertita in formato CSR.
+        The matrix converted to CSR format.
 
     Raises
     ------
     ValueError
-        Se il percorso non è fornito o è `None`.
+        If no file path is provided.
     IOError
-        Se si verifica un errore durante la lettura del file.
+        If the file cannot be read or parsed.
 
     Notes
     -----
-    Utilizza `scipy.io.mmread`, che restituisce inizialmente una matrice COO,
-    poi convertita in CSR, ideale per metodi iterativi e
-    prodotti matrice-vettore.
+    Uses `scipy.io.mmread`, which returns a COO matrix.
+    This is converted to CSR format, which is optimal for
+    iterative solvers and matrix-vector operations.
     """
-    if filePath is None:
-        raise ValueError("Percorso non valido: `filePath` è None.")
+    if file_path is None:
+        raise ValueError("Invalid input: `file_path` is None.")
 
     try:
-        A = scipy.io.mmread(filePath)
-
-        shape = A.shape
-        n_elements = shape[0] * shape[1]
-        n_nonzeros = A.nnz
-        sparsity = 100 * (1 - n_nonzeros / n_elements)
+        A = scipy.io.mmread(file_path).tocsr()  # Convert explicitly to CSR
 
         if debug:
-            print(f"Nome file: {filePath}")
-            print(f"Dimensione matrice: {shape[0]} x {shape[1]}")
-            print(f"Elementi non nulli: {n_nonzeros}")
-            print(f"Sparsità: {sparsity:.2f}%")
+            shape = A.shape
+            n_elements = shape[0] * shape[1]
+            n_nonzeros = A.nnz
+            sparsity = 100 * (1 - n_nonzeros / n_elements)
+
+            print(f"[MatrixReader] File: {file_path}")
+            print(f"[MatrixReader] Shape: {shape[0]} x {shape[1]}")
+            print(f"[MatrixReader] Non-zero entries: {n_nonzeros}")
+            print(f"[MatrixReader] Sparsity: {sparsity:.2f}%")
 
         return A
 
     except Exception as e:
-        raise IOError(f"Errore durante la lettura della matrice: {str(e)}")
+        raise IOError(f"Error while reading matrix: {str(e)}")

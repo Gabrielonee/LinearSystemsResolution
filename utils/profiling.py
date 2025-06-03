@@ -4,42 +4,45 @@ import tracemalloc
 
 def profile_solver(solver_func, *args, **kwargs):
     """
-    Esegue un solver per sistemi lineari tracciando tempo di esecuzione e
-    memoria massima utilizzata.
+    Runs a linear system solver while profiling execution time and peak memory usage.
 
     Parameters
     ----------
     solver_func : callable
-        Funzione risolutiva (es. metodo iterativo) da profilare.
-        Deve restituire un oggetto risultato.
+        The solver function to profile (e.g., iterative method).
     *args : tuple
-        Argomenti posizionali da passare a `solver_func`.
+        Positional arguments to pass to solver_func.
     **kwargs : dict
-        Argomenti keyword da passare a `solver_func`.
+        Keyword arguments to pass to solver_func.
 
     Returns
     -------
-    result : object
-        Risultato restituito da `solver_func`.
-        elapsed_time : float
-        Tempo totale di esecuzione in secondi.
-    peak_memory_kb : float
-        Memoria massima utilizzata durante l'esecuzione, in kilobyte (KB).
+    tuple
+        (result, elapsed_time, peak_memory_kb):
+        - result: output returned by solver_func, or None if an exception occurs
+        - elapsed_time: float, total execution time in seconds
+        - peak_memory_kb: float, peak memory usage during execution in kilobytes
 
     Notes
     -----
-    Utilizza `tracemalloc` per rilevare il picco di memoria.
-    La memoria viene riportata in kilobyte.
-    Il tempo viene misurato con `time.perf_counter()`
-    per la massima precisione.
+    - Uses tracemalloc to track Python heap memory peak usage.
+    - Uses time.perf_counter() for high-resolution timing.
+    - The function guarantees timing and memory measurement even if solver_func raises an exception.
     """
     tracemalloc.start()
     start_time = time.perf_counter()
+    result = None
 
-    result = solver_func(*args, **kwargs)
+    try:
+        # Call the solver function with all given arguments
+        result = solver_func(*args, **kwargs)
+    finally:
+        # Measure elapsed time regardless of exceptions
+        elapsed_time = time.perf_counter() - start_time
+        # Get current and peak memory usage, then stop tracing
+        _, peak_memory = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
 
-    elapsed_time = time.perf_counter() - start_time
-    _, peak_memory = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
-
-    return result, elapsed_time, peak_memory / 1024  # Convertito in KB
+    # Convert peak memory from bytes to kilobytes
+    peak_memory_kb = peak_memory / 1024
+    return result, elapsed_time, peak_memory_kb
