@@ -5,35 +5,8 @@
         "max_iterations": 20000,
         "performed_iterations": 37,
         "rel_error": 0.0017662465191132216,
-        "time_seconds": 0.046970833966042846,
+        "time_seconds": 0.046939457999542356,
         "memory_kb": 7998.962890625
-    },
-    {
-        "method": "GaussSeidelLib",
-        "tolerance": 0.0001,
-        "max_iterations": 20000,
-        "performed_iterations": 12,
-        "rel_error": 1.0305022220379485e-06,
-        "time_seconds": 0.17002508300356567,
-        "memory_kb": 79821.37890625
-    },
-    {
-        "method": "Gradient",
-        "tolerance": 0.0001,
-        "max_iterations": 20000,
-        "performed_iterations": 161,
-        "rel_error": 0.018129645117112493,
-        "time_seconds": 0.38244220899650827,
-        "memory_kb": 117.9140625
-    },
-    {
-        "method": "ConjugateGradient",
-        "tolerance": 0.0001,
-        "max_iterations": 20000,
-        "performed_iterations": 42,
-        "rel_error": 0.009821128457264697,
-        "time_seconds": 0.052014792046975344,
-        "memory_kb": 165.0078125
     },
     {
         "method": "Jacobi",
@@ -41,35 +14,8 @@
         "max_iterations": 20000,
         "performed_iterations": 58,
         "rel_error": 1.666756136742685e-05,
-        "time_seconds": 0.07158299995353445,
+        "time_seconds": 0.07132649997947738,
         "memory_kb": 7998.962890625
-    },
-    {
-        "method": "GaussSeidelLib",
-        "tolerance": 1e-06,
-        "max_iterations": 20000,
-        "performed_iterations": 15,
-        "rel_error": 2.0549536515779372e-08,
-        "time_seconds": 0.1934887079987675,
-        "memory_kb": 79821.35546875
-    },
-    {
-        "method": "Gradient",
-        "tolerance": 1e-06,
-        "max_iterations": 20000,
-        "performed_iterations": 1949,
-        "rel_error": 0.0006694229253858514,
-        "time_seconds": 4.60112854099134,
-        "memory_kb": 117.9453125
-    },
-    {
-        "method": "ConjugateGradient",
-        "tolerance": 1e-06,
-        "max_iterations": 20000,
-        "performed_iterations": 122,
-        "rel_error": 0.00011979846178325783,
-        "time_seconds": 0.14788512501399964,
-        "memory_kb": 165.0078125
     },
     {
         "method": "Jacobi",
@@ -77,35 +23,8 @@
         "max_iterations": 20000,
         "performed_iterations": 79,
         "rel_error": 1.572869898396333e-07,
-        "time_seconds": 0.09675870800856501,
+        "time_seconds": 0.0961997089907527,
         "memory_kb": 7998.962890625
-    },
-    {
-        "method": "GaussSeidelLib",
-        "tolerance": 1e-08,
-        "max_iterations": 20000,
-        "performed_iterations": 19,
-        "rel_error": 1.1099402890926249e-10,
-        "time_seconds": 0.23712333297589794,
-        "memory_kb": 79821.33203125
-    },
-    {
-        "method": "Gradient",
-        "tolerance": 1e-08,
-        "max_iterations": 20000,
-        "performed_iterations": 5087,
-        "rel_error": 6.865240122775099e-06,
-        "time_seconds": 12.017873333999887,
-        "memory_kb": 117.9453125
-    },
-    {
-        "method": "ConjugateGradient",
-        "tolerance": 1e-08,
-        "max_iterations": 20000,
-        "performed_iterations": 196,
-        "rel_error": 5.586660593364432e-07,
-        "time_seconds": 0.23670162505004555,
-        "memory_kb": 165.0078125
     },
     {
         "method": "Jacobi",
@@ -113,34 +32,7 @@
         "max_iterations": 20000,
         "performed_iterations": 100,
         "rel_error": 1.4842714045158647e-09,
-        "time_seconds": 0.12170254200464115,
+        "time_seconds": 0.12159300001803786,
         "memory_kb": 7998.962890625
-    },
-    {
-        "method": "GaussSeidelLib",
-        "tolerance": 1e-10,
-        "max_iterations": 20000,
-        "performed_iterations": 22,
-        "rel_error": 2.211292714143046e-12,
-        "time_seconds": 0.27391066699055955,
-        "memory_kb": 79821.31640625
-    },
-    {
-        "method": "Gradient",
-        "tolerance": 1e-10,
-        "max_iterations": 20000,
-        "performed_iterations": 8285,
-        "rel_error": 6.937814275449468e-08,
-        "time_seconds": 19.57383704202948,
-        "memory_kb": 117.9453125
-    },
-    {
-        "method": "ConjugateGradient",
-        "tolerance": 1e-10,
-        "max_iterations": 20000,
-        "performed_iterations": 240,
-        "rel_error": 5.3242293341035215e-09,
-        "time_seconds": 0.2900229159859009,
-        "memory_kb": 165.0078125
     }
 ]
