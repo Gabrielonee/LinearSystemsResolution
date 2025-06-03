@@ -1,69 +1,70 @@
 import numpy as np
-from utilities.metrics import verify_accuracy
-from iterativeMethods import gauss_seidel, jacobi, gradient, con_gradient, gauss_seidel_lib
-from utilities.classes import SolverResult
-from utilities.validation import validate_matrix
-from utilities.profiling import profile_solver
+from utils.metrics import verify_accuracy
+from iterativeMethods import (
+    jacobi,
+    gauss_seidel_lib,
+    gradient,
+    con_gradient,
+    # gauss_seidel,  # Uncomment if using custom implementation
+)
+from utils.classes import SolverResult
+from utils.validation import validate_matrix
+from utils.profiling import profile_solver
 
 
 def solver_matrix(matrix, right_side=None, solution=None,
                   tol=1e-10, nmax=20000):
     """
-    Esegue tutti i metodi iterativi implementati per la risoluzione di
-    un sistema lineare Ax = b,
-    dove A è una matrice simmetrica e definita positiva.
+    Executes all implemented iterative methods to solve a linear system Ax = b,
+    where A is assumed to be symmetric and positive definite.
 
-    Parametri
+    Parameters
     ----------
-    matrix : scipy.sparse matrix o numpy.ndarray
-        Matrice dei coefficienti del sistema
+    matrix : scipy.sparse matrix or numpy.ndarray
+        Coefficient matrix A of the system.
 
-    right_side : numpy.ndarray, opzionale
-        Vettore relativo al lato destro del sistema lineare.
-        Se non fornito, verrà calcolato a bartire da A e x.
+    right_side : numpy.ndarray, optional
+        Right-hand side vector b. If not provided, computed as b = A @ x_true.
 
-    solution : numpy.ndarray, opzionale
-        Vettore soluzione "vera" x da usare per il calcolo di b = Ax
-        e del relativo errore.
-        Se non fornito, si assume un vettore di 1 (np.ones).
+    solution : numpy.ndarray, optional
+        True solution vector x. If not provided, assumed to be np.ones(n).
 
     tol : float, default=1e-10
-        Tolleranza sul residuo relativa per l'arresto dei metodi iterativi.
+        Tolerance for the stopping criterion on the relative residual.
 
     nmax : int, default=20000
-        Numero massimo di iterazioni concesso a ciascun metodo.
+        Maximum number of iterations allowed per method.
 
-    Ritorna
+    Returns
     -------
     results : dict
-        Dizionario contenente, per ogni metodo:
-            - un oggetto SolverResult con tutti i dati della computazione
-              (soluzione, iterazioni, tempo, memoria, errore),
-            - oppure una stringa d'errore se il metodo fallisce.
+        Dictionary with method names as keys and:
+            - a SolverResult object containing computation metrics, or
+            - an error string if the method fails.
     """
 
-    # Validazione della matrice in input
-    rows = validate_matrix(matrix)
+    # Validate the input matrix and determine its dimension
+    n = validate_matrix(matrix)
     results = {}
 
-    # Costruzione della soluzione esatta e del membro destro b = Ax
-    x_true = solution if solution is not None else np.ones(rows)
+    # Define true solution and compute right-hand side
+    x_true = solution if solution is not None else np.ones(n)
     b = right_side if right_side is not None else matrix @ x_true
 
-    # Definizione dei metodi iterativi disponibili
+    # Map method names to solver functions
     solvers = {
         "Jacobi": jacobi.jacobi_solver,
-        #"GaussSeidel": gauss_seidel.gauss_seidel_solver,
-        "GaussSeidelLib": gauss_seidel_lib.gauss_seidel_solver_library,
-        "Gradient": gradient.gradient_solver,
-        "ConjugateGradient": con_gradient.conjugate_gradient_solver
+        # "GaussSeidel": gauss_seidel.gauss_seidel_solver,  # Not used if using library version
+       "GaussSeidelLib": gauss_seidel_lib.gauss_seidel_solver_library,
+       "Gradient": gradient.gradient_solver,
+       "ConjugateGradient": con_gradient.conjugate_gradient_solver
     }
 
-    # Esecuzione di ciascun metodo con profilazione di tempo e memoria
+    # Loop over each solver and profile execution
     for name, method in solvers.items():
         try:
-            # Misura tempo e picco di memoria usata
-            sol, elapsed_time, peak_memory = profile_solver(
+            # Profile runtime and peak memory usage
+            method_result, elapsed_time, peak_memory = profile_solver(
                 method,
                 matrix, b,
                 x0=np.zeros_like(b),
@@ -71,22 +72,22 @@ def solver_matrix(matrix, right_side=None, solution=None,
                 nmax=nmax
             )
 
-            # Calcolo errore relativo rispetto alla soluzione esatta
-            rel_error = verify_accuracy(sol.solution, x_true)
+            # Compute relative error against true solution
+            rel_error = verify_accuracy(method_result.solution, x_true)
 
-            # Costruzione del risultato per il metodo corrente
+            # Wrap results in SolverResult object
             results[name] = SolverResult(
                 method_name=name,
                 tol=tol,
                 max_iterations=nmax,
-                method_result=sol,
+                method_result=method_result,
                 rel_error=rel_error,
                 time_seconds=elapsed_time,
                 memory_kb=peak_memory
             )
 
         except Exception as e:
-            # In caso di errore, salva messaggio d'errore invece del risultato
+            # On failure, store the exception message
             results[name] = f"Error: {str(e)}"
 
     return results

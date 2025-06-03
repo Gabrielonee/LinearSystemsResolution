@@ -1,3 +1,10 @@
+# macOS ignore
 .DS_Store
-.png
-.json
+
+# image files
+*.png
+*.jpg
+*.jpeg
+
+# JSON files
+*.json

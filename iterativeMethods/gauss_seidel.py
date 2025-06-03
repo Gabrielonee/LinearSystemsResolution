@@ -1,34 +1,64 @@
 import numpy as np
 import scipy.sparse as sp
-from utilities.classes import IterativeResult
+from utils.classes import IterativeResult
 from directMethods.trian_inf import triang_inf
 
+
 def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):
+    """
+    Solve the linear system Ax = b using the Gauss-Seidel iterative method.
+
+    Parameters
+    ----------
+    A_sparse : scipy.sparse matrix or array-like
+        Sparse coefficient matrix.
+    b : numpy.ndarray
+        Right-hand side vector.
+    x0 : numpy.ndarray
+        Initial guess vector.
+    tol : float
+        Convergence tolerance for solution difference norm.
+    nmax : int
+        Maximum number of iterations.
+
+    Returns
+    -------
+    IterativeResult
+        Object with solution vector, iteration count, and convergence flag.
+    """
     converged = False
-    nit = 0
-    
-    # Forza il formato CSR per efficienza
+
+    # Ensure A is in CSR format for efficient row slicing
     if not sp.issparse(A_sparse):
         A_sparse = sp.csr_matrix(A_sparse)
     elif not sp.isspmatrix_csr(A_sparse):
         A_sparse = A_sparse.tocsr()
-    # Fattorizzazione: L = parte inferiore + diagonale, N = parte superiore stretta
-    L = sp.tril(A_sparse)         # Triangolare inferiore incluso diagonale
-    N = A_sparse - L              # Parte superiore stretta
-    # Conversione per risoluzione efficiente del sistema triangolare
+
+    # Split matrix into L (lower triangular including diagonal) and N (strict upper)
+    L = sp.tril(A_sparse)          # Lower triangular part including diagonal
+    N = A_sparse - L               # Strict upper triangular part
+
+    # Convert L to CSC for efficient triangular solves
     L = L.tocsc()
-    # Inizializzazione soluzione
+
     x_new = x0.copy()
+
     for nit in range(nmax):
-        #Costruisce RHS come b - N * x_k
-        rhs = b - N @ x_new           
-        x_new = triang_inf(L, rhs)  # Risolve L x = rhs
-        #Controlla la convergenza usando norma 2
+        # Compute RHS: b - N * x_k
+        rhs = b - N @ x_new
+        
+        # Solve L * x_{k+1} = rhs using efficient triangular solver
+        x_new = triang_inf(L, rhs)
+        
+        # Check convergence: norm of difference between successive iterates
         if np.linalg.norm(x_new - x0) < tol:
             converged = True
             break
+        
+        # Prepare for next iteration
+        x0 = x_new.copy()
 
-        x0 = x_new.copy()  # Prepara per prossima iterazione
     if not converged:
-        print("Metodo di Gauss non converge entro il numero massimo di iterazioni.")
+        print("Gauss-Seidel method did not converge within maximum iterations.")
+
     return IterativeResult(x_new, nit + 1, converged)

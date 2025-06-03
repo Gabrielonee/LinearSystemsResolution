@@ -1,43 +1,74 @@
 import numpy as np
-from utilities.classes import IterativeResult
+from utils.classes import IterativeResult
 
 
 def gradient_solver(A_sparse, b, x0, tol, nmax):
+    """
+    Solve the linear system Ax = b using the Gradient Method (Steepest Descent).
+
+    Parameters
+    ----------
+    A_sparse : scipy.sparse matrix
+        Sparse coefficient matrix (assumed symmetric positive definite).
+    b : numpy.ndarray
+        Right-hand side vector.
+    x0 : numpy.ndarray
+        Initial guess vector.
+    tol : float
+        Convergence tolerance for relative residual.
+    nmax : int
+        Maximum number of iterations allowed.
+
+    Returns
+    -------
+    IterativeResult
+        Object containing solution vector, number of iterations, and convergence status.
+    """
     converged = False
-    #Calcolo del residuo iniziale r = b - Ax0
+
+    # Compute initial residual r = b - A*x0
     r = b - A_sparse @ x0
-    #Calcolo della norma 2 del residuo e del termine noto
+    
+    # Norms for convergence check
     norm_r = np.linalg.norm(r)
     norm_b = np.linalg.norm(b)
-    #Definizione della tolleranza relativa: ||r_k|| <= tol * ||b||
+    
+    # Relative tolerance adjusted by norm of b to avoid scaling issues
     rel_tol = tol * norm_b if norm_b > 0 else tol
-    #Inizializzazione contatore di iterazioni
+    
     nit = 0
     
+    # Iterative loop until convergence or max iterations
     while norm_r > rel_tol and nit < nmax:
-        # Calcola A * r_k (serve per denominatore di α_k)
+        # Compute A*r (needed for step size denominator)
         Ar = A_sparse @ r
-        #Calcola il numeratore e denominatore per α_k = (rᵏ ⋅ rᵏ) / (rᵏ ⋅ A rᵏ)
+        
+        # Compute numerator and denominator for step size alpha_k
         r_dot_r = np.dot(r, r)
         r_dot_Ar = np.dot(r, Ar)
+        
+        # Avoid division by zero or very small denominator
         if abs(r_dot_Ar) < 1e-14:
             break
-        #Calcolo del passo α_k
+        
+        # Compute step size alpha_k
         alpha = r_dot_r / r_dot_Ar
-        #Aggiornamento della soluzione: x_{k+1} = x_k + α_k * r_k
+        
+        # Update solution: x_{k+1} = x_k + alpha_k * r_k
         x0 = x0 + alpha * r
-        #Calcolo del nuovo residuo r_{k+1} = b - A x_{k+1}
+        
+        # Update residual: r_{k+1} = b - A * x_{k+1}
         r = b - A_sparse @ x0
-        #Calcolo della nuova norma del residuo
+        
+        # Update residual norm
         norm_r = np.linalg.norm(r)
-        #Incremento del numero di iterazioni
+        
         nit += 1
 
-    #Controllo di convergenza
+    # Check convergence status
     if nit >= nmax:
-        print("Metodo del Gradiente non converge entro il numero massimo di iterazioni.")
+        print("Gradient method did not converge within maximum iterations.")
     else:
         converged = True
 
-    #Ritorna la soluzione e il numero di iterazioni
     return IterativeResult(x0, nit, converged)
