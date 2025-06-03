@@ -42,4 +42,4 @@ def verify_accuracy(x_computed, x_true):
         return np.linalg.norm(x_computed - x_true, ord=2)
 
     rel_error = np.linalg.norm(x_computed - x_true, ord=2) / norm_true
-    return f"{rel_error:.4e}"
+    return rel_error

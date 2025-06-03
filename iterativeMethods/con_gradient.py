@@ -1,6 +1,5 @@
 import numpy as np
-from utilities.classes import IterativeResult
-
+from utils.classes import IterativeResult
 
 def conjugate_gradient_solver(A_sparse, b, x0, tol: float, nmax: int):
     converged = False

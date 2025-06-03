@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.sparse as sp
-from utilities.classes import IterativeResult
+from utils.classes import IterativeResult
 from directMethods.trian_inf import triang_inf
 
 def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):

@@ -1,7 +1,6 @@
 
 import numpy as np
 import scipy.sparse as sp
-from utilities.classes import IterativeResult
 
 def triang_inf(L_sparse, b):
     """

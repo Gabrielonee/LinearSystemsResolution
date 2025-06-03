@@ -1,5 +1,5 @@
 import numpy as np
-from utilities.classes import IterativeResult
+from utils.classes import IterativeResult
 
 
 def gradient_solver(A_sparse, b, x0, tol, nmax):
