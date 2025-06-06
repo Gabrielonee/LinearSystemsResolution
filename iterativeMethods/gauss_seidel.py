@@ -36,29 +36,22 @@ def gauss_seidel_solver(A_sparse, b, x0, tol: float, nmax: int):
 
     # Split matrix into L (lower triangular including diagonal) and N (strict upper)
     L = sp.tril(A_sparse)          # Lower triangular part including diagonal
-    N = A_sparse - L               # Strict upper triangular part
-
-    # Convert L to CSC for efficient triangular solves
     L = L.tocsc()
 
     x_new = x0.copy()
-
+    L = sp.tril(A_sparse).tocsc()
+    x_new = x0.copy()
+    norm_b = np.linalg.norm(b)
     for nit in range(nmax):
-        # Compute RHS: b - N * x_k
-        rhs = b - N @ x_new
-        
-        # Solve L * x_{k+1} = rhs using efficient triangular solver
-        x_new = triang_inf(L, rhs)
-        
-        # Check convergence: norm of difference between successive iterates
-        if np.linalg.norm(x_new - x0) < tol:
+        res = b - A_sparse @ x_new
+        temp = np.linalg.norm(res) / norm_b
+        if temp < tol:
             converged = True
             break
-        
-        # Prepare for next iteration
-        x0 = x_new.copy()
-
+        x0 = triang_inf(L, res)
+        x_new += x0
+    
     if not converged:
-        print("Gauss-Seidel method did not converge within maximum iterations.")
-
+        print("Gauss-Seidel method did not converge within the maximum number of iterations.")
+    
     return IterativeResult(x_new, nit + 1, converged)
