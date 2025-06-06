@@ -4,52 +4,27 @@ import scipy.sparse.linalg as spla
 from utils.classes import IterativeResult
 
 def gauss_seidel_solver_library(A_sparse, b, x0, tol: float, nmax: int):
-    """
-    Solve linear system Ax = b using Gauss-Seidel method with scipy's triangular solver.
-
-    Parameters
-    ----------
-    A_sparse : scipy.sparse matrix
-        Sparse matrix of coefficients.
-    b : numpy.ndarray
-        Right-hand side vector.
-    x0 : numpy.ndarray
-        Initial guess vector.
-    tol : float
-        Convergence tolerance for solution update.
-    nmax : int
-        Maximum number of iterations.
-
-    Returns
-    -------
-    IterativeResult
-        Contains solution vector, iterations performed, and convergence flag.
-    """
     converged = False
     
-    # Split matrix A into L (lower triangular including diagonal) and N (strict upper triangular)
-    L = sp.tril(A_sparse)  
-    N = A_sparse - L       
-    
-    # Convert L to CSC format for efficient triangular solves
-    L = L.tocsc()
-    
+    #Lower triangular di A
+    L = sp.tril(A_sparse).tocsc()
     x_new = x0.copy()
+    #Calcolo norma di b
+    norm_b = np.linalg.norm(b)
 
     for nit in range(nmax):
-        # Compute RHS for Gauss-Seidel update
-        rhs = b - N @ x_new
-        
-        # Solve lower triangular system L * x_new = rhs
-        x_new = spla.spsolve_triangular(L, rhs, lower=True)
-        
-        # Check convergence: norm of difference between consecutive iterates
-        if np.linalg.norm(x_new - x0) < tol:
+        #Calcolo del residuo
+        res = b - A_sparse @ x_new
+        #Calcolo della norma del residuo divisa per la norma di b
+        temp = np.linalg.norm(res) / norm_b
+        #Controllo della convergenza
+        if temp < tol:
             converged = True
             break
-        
-        x0 = x_new.copy()
-
+        # Risoluzione del sistema triangolare inferiore
+        x0 = spla.spsolve_triangular(L, res, lower=True)
+        x_new += x0
+    
     if not converged:
         print("Gauss-Seidel method did not converge within the maximum number of iterations.")
     
